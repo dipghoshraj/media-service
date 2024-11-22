@@ -1,6 +1,6 @@
-from flask_sqlalchemy import SQLAlchemy
 import datetime
-db = SQLAlchemy()
+from app.model import db
+
 
 class ImageMetadata:
     id = db.Column(db.Integer, primary_key=True)
