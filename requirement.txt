@@ -14,5 +14,4 @@ minio
 kafka-python
 redis
 psycopg2-binary
-boto3
 pillow
