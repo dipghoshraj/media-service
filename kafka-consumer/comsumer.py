@@ -10,10 +10,6 @@ KAFKA_BROKER_URL =os.getenv("KAFKA_BROKER_URL", "localhost:9092")
 KAFKA_UPLOAD_TOPIC = os.getenv("KAFKA_TOPIC", "image_uploads")
 
 print(KAFKA_BROKER_URL)
-
-# producer = KafkaProducer(bootstrap_servers=KAFKA_BROKER_URL)
-# producer.send(KAFKA_UPLOAD_TOPIC, value=bytes('image_id', 'utf-8'))
-
 compress_consumer = KafkaConsumer(
     KAFKA_UPLOAD_TOPIC,
     bootstrap_servers=KAFKA_BROKER_URL,

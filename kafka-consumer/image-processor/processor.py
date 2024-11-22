@@ -7,7 +7,7 @@ from minio import Minio
 
 
 
-class Images:
+class Processor:
 
     def __init__(self, logger ):
 
