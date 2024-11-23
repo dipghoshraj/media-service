@@ -11,7 +11,7 @@ COPY . /app
 RUN pip install -r requirement.txt
 
 # Make port 5000 available to the world outside this container
-EXPOSE 5000
+EXPOSE 8000
 
 # Define environment variable to avoid buffering of logs
 ENV PYTHONUNBUFFERED 1

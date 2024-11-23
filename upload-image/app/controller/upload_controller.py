@@ -13,9 +13,9 @@ def index():
 @upload_blueprint.route('/upload', methods=['POST'])
 def upload():
     file = request.files['file']
-    image_id = file.filename
-    user_id = request.POST.get('user_id')
+    print(request.form.get('user_id'))
+    user_id = request.form.get('user_id')
 
     client = Uploader()
-    upload_data = client.upload(image_id, user_id)
+    upload_data = client.upload_iamge(file, user_id)
     return jsonify(upload_data, 201)

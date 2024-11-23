@@ -16,14 +16,15 @@ from app.model import db
 # }
 
 
-class Image:
+class Image(db.Model):
 
+    __tablename__ = 'Image'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     url = db.Column(db.String)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # Foreign key to User
-    post_id = db.Column(db.Integer, db.ForeignKey('Post.id'), nullable=True)  # Foreign key to Post
-    image_matadata_id = db.Column(db.Integer, db.ForeignKey('image_matadata_id')) # Foreign key to metadata
+    user_id = db.Column(db.Integer, nullable=False)  # Foreign key to User
+    post_id = db.Column(db.Integer, nullable=True)  # Foreign key to Post
+    image_matadata_id = db.Column(db.Integer, db.ForeignKey('ImageMetadata.image_id')) # Foreign key to metadata
 
     def __repr__(self):
         return f"<Image {self.id}>"

@@ -8,6 +8,7 @@ services:
       - broker-kafka
     depends_on:
       - zookeeper
+    restart: on-failure
     ports:
       - "9092:9092"
       - "9101:9101"
@@ -78,6 +79,8 @@ services:
       context: ./upload-image
       dockerfile: Dockerfile
     container_name: upload-service
+    ports:
+      - "8000:8000"
     networks:
       - broker-kafka
     depends_on:
