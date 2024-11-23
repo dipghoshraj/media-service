@@ -23,8 +23,7 @@ class Image:
     url = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # Foreign key to User
     post_id = db.Column(db.Integer, db.ForeignKey('Post.id'), nullable=True)  # Foreign key to Post
-    image_matadata_id = db.Column(db.Integer, db.ForeignKey('image_matadata_id'), nullable=False) # Foreign key to metadata
-
+    image_matadata_id = db.Column(db.Integer, db.ForeignKey('image_matadata_id')) # Foreign key to metadata
 
     def __repr__(self):
         return f"<Image {self.id}>"
