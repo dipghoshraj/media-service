@@ -1,17 +1,16 @@
-# Media Sevice (DFS)
+# Agni Stack (DFS)
 
-DFS manages data storage across multiple nodes (servers), enabling scalability, fault tolerance, and high availability
-
+This is paas system which serves as a ondemand server or node which can depoy any docker image with a custome app domain with in a minutes
 ## **Define Requirements**
 
-* Features: Replication, fault tolerance, scalability, read/write consistency
+* Features: deployment, custome domain based access, scalablity
 * Workload: Read-heavy
 * Storage Type: Object storage
-* EntryPoint: Cluster Manager
+* EntryPoint: Graphql apis
 
 ## **Architecture Diagram**
 
 **Architecture and all other Documents have been moved to [git book ideation documentation
-](https://dipghoshraj.gitbook.io/dipghoshraj-docs/media-service)**
+](https://dipghoshraj.gitbook.io/dipghoshrajwiki/agnistack)**
 
 <!-- protoc --go-grpc_out=. --go-grpc_opt=paths=source_relative file-service-nodes\domain\proto\storage.proto -->
