@@ -1,0 +1,37 @@
+# .github/issue_templates/subtask.yml
+name: Task
+description: Use this template to create a specific task that contributes to an Epic.
+labels: ["Type: Task"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      label: "Overview"
+      value: "Provide a clear and concise description of this sub-task."
+  - type: text
+    id: related-epic
+    attributes:
+      label: "Related Epic (Issue #)"
+      description: "If this task belongs to an existing Epic, please link it by providing the Epic's issue number."
+      placeholder: "e.g., #123"
+      value: ""
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: "Acceptance Criteria"
+      description: "What specific conditions need to be met for this task to be considered complete?"
+      placeholder: "- Unit tests pass for function X.\n- UI element Y is correctly displayed."
+      value: ""
+      validations:
+        required: true
+  - type: dropdown
+    id: status
+    attributes:
+      label: "Status"
+      options:
+        - To Do
+        - In Progress
+        - Blocked
+        - Done
+      validations:
+        required: true
