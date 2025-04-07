@@ -1,35 +1,36 @@
 # .github/issue_templates/epic.yml
-name: Epic
-description: Use this template to create a high-level Epic story.
+name: Epic Story
+description: Use this template to create a high-level Epic story for cloud infrastructure software.
 labels: ["Type: Epic"]
-assignees: []
 body:
   - type: markdown
     attributes:
-      label: "Overview"
-      value: "Provide a high-level summary of the Epic story."
+      value: "Provide a high-level summary of the Epic story related to our cloud infrastructure."
   - type: textarea
-    id: business-value
+    id: components-involved
     attributes:
-      label: "Business Value / Goal"
-      description: "What business value will this epic deliver?"
-      placeholder: "e.g., Increase user engagement by 20%."
-      value: ""
-      validations:
-        required: true
+      label: "Components / Services Affected"
+      description: "Which core components or services of our cloud infrastructure will be primarily involved or affected by this epic?"
+      placeholder: "e.g., Compute Service, Storage Service, Networking Layer, Identity Management."
+      value: "Mention the components or services that will be primarily involved or affected by this epic."
   - type: textarea
-    id: acceptance-criteria
+    id: high-level-design
+    attributes:
+      label: "High-Level Design Considerations"
+      description: "Outline the key design principles or architectural considerations for this epic."
+      placeholder: "e.g., Scalability requirements, fault tolerance mechanisms, security implications."
+      value: "high-level design considerations for the epic."
+  - type: textarea
+    id: high-level-acceptance-criteria
     attributes:
       label: "High-Level Acceptance Criteria"
-      description: "What are the key outcomes or conditions that will signify completion of this epic?"
-      placeholder: "- Feature A is implemented.\n- User feedback is positive."
-      value: ""
-      validations:
-        required: true
+      description: "What are the key outcomes or conditions that will signify completion of this epic from an infrastructure perspective?"
+      placeholder: "- The new compute service can handle X number of requests per second.\n- Storage latency is below Y milliseconds."
+      value: "high-level acceptance criteria for the epic."
   - type: textarea
-    id: out-of-scope
+    id: dependencies
     attributes:
-      label: "Out of Scope"
-      description: "What is explicitly *not* included in this epic?"
-      placeholder: "e.g., Integration with external system X."
-      value: ""
+      label: "Dependencies"
+      description: "Are there any other epics or significant pieces of work that need to be completed before or in parallel with this epic? (Link issue numbers if applicable)."
+      placeholder: "e.g., Depends on #45 (Core Networking Upgrade)."
+      value: "dependencies for this epic."
