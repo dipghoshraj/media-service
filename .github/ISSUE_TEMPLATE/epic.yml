@@ -14,20 +14,6 @@ body:
       placeholder: "e.g., Compute Service, Storage Service, Networking Layer, Identity Management."
       value: "Mention the components or services that will be primarily involved or affected by this epic."
   - type: textarea
-    id: high-level-design
-    attributes:
-      label: "High-Level Design Considerations"
-      description: "Outline the key design principles or architectural considerations for this epic."
-      placeholder: "e.g., Scalability requirements, fault tolerance mechanisms, security implications."
-      value: "high-level design considerations for the epic."
-  - type: textarea
-    id: high-level-acceptance-criteria
-    attributes:
-      label: "High-Level Acceptance Criteria"
-      description: "What are the key outcomes or conditions that will signify completion of this epic from an infrastructure perspective?"
-      placeholder: "- The new compute service can handle X number of requests per second.\n- Storage latency is below Y milliseconds."
-      value: "high-level acceptance criteria for the epic."
-  - type: textarea
     id: dependencies
     attributes:
       label: "Dependencies"
