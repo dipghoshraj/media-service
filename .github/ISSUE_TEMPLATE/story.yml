@@ -2,33 +2,7 @@
 name: Story
 description: Use this template for a user story.
 labels: ["Type: Story"]
-assignees: []
 body:
   - type: markdown
     attributes:
-      label: "As a..."
-      value: "As a [type of user]"
-  - type: markdown
-    attributes:
-      label: "I want..."
-      value: "I want [some goal]"
-  - type: markdown
-    attributes:
-      label: "So that..."
-      value: "So that [some reason/benefit]"
-  - type: textarea
-    id: acceptance-criteria
-    attributes:
-      label: "Acceptance Criteria"
-      description: "How will we know this story is complete?"
-      placeholder: "- [Condition 1]\n- [Condition 2]"
-      value: ""
-      validations:
-        required: true
-  - type: text
-    id: related-epic
-    attributes:
-      label: "Related Epic (Issue #)"
-      description: "If this story belongs to an Epic, link it here."
-      placeholder: "e.g., #123"
-      value: ""
+      value: "Provide a clear and concise description of the user story."
