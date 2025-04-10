@@ -1,5 +1,5 @@
 # .github/issue_templates/epic.yml
-name: Epic Story
+name: Epic
 description: Use this template to create a high-level Epic story for cloud infrastructure software.
 labels: ["Type: Epic"]
 body:
