@@ -6,3 +6,11 @@ body:
   - type: markdown
     attributes:
       value: "Provide a clear and concise description of the user story."
+  
+  - type: textarea
+    id: components-involved
+    attributes:
+      label: "Components / Services Affected"
+      description: "Which core components or services of our cloud infrastructure will be primarily involved or affected by this story?"
+      placeholder: "e.g., Compute Service, Storage Service, Networking Layer, Identity Management."
+      value: "Mention the components or services that will be primarily involved or affected by this story."
