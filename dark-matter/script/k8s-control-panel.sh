@@ -12,13 +12,13 @@ sudo apt install -y python3-pip
 
 echo "📦 Installing dependencies..."
 sudo apt update && sudo apt install -y python3-pip sshpass git
-# pip3 install --user ansible --break-system-packages # patch for the new debian version for root useage
+pip3 install --user ansible --break-system-packages # patch for the new debian version for root useage
 export PATH="$HOME/.local/bin:$PATH"
 
 echo "📥 Cloning Kubespray..."
 git clone https://github.com/kubernetes-sigs/kubespray.git --depth 1 || true
 cd kubespray
-# pip3 install -r requirements.txt --ignore-installed --break-system-packages # patch for the new debian version for root useage
+pip3 install -r requirements.txt --ignore-installed --break-system-packages # patch for the new debian version for root useage
 
 echo "📂 Preparing control-plane inventory..."
 cp -rfp inventory/sample inventory/${CLUSTER_NAME}
