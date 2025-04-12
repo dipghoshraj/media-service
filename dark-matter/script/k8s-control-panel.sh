@@ -18,7 +18,7 @@ export PATH="$HOME/.local/bin:$PATH"
 echo "📥 Cloning Kubespray..."
 git clone https://github.com/kubernetes-sigs/kubespray.git --depth 1 || true
 cd kubespray
-pip3 install -r requirements.txt
+pip3 install -r requirements.txt --break-system-packages
 
 echo "📂 Preparing control-plane inventory..."
 cp -rfp inventory/sample inventory/${CLUSTER_NAME}
