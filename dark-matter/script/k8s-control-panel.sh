@@ -24,6 +24,9 @@ echo "📂 Preparing control-plane inventory..."
 cp -rfp inventory/sample inventory/${CLUSTER_NAME}
 cp ../${CONTROL_PLANE_INI} inventory/${CLUSTER_NAME}/inventory.ini
 
+
+pip3 install --user ansible-core==2.16.4 --break-system-packages # patch for the new debian version for root useage
+
 echo "🚀 Deploying control-plane nodes..."
 ansible-playbook -i inventory/${CLUSTER_NAME}/inventory.ini \
   --private-key=${SSH_KEY} \
