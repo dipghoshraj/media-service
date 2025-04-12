@@ -12,7 +12,7 @@ sudo apt install -y python3-pip
 
 echo "📦 Installing dependencies..."
 sudo apt update && sudo apt install -y python3-pip sshpass git
-pip3 install --user ansible
+pip3 install ansible
 export PATH="$HOME/.local/bin:$PATH"
 
 echo "📥 Cloning Kubespray..."
