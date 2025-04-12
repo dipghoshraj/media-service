@@ -27,9 +27,4 @@ ansible-playbook -i inventory/${CLUSTER_NAME}/inventory.ini \
   -u ${SSH_USER} \
   cluster.yml -b -v
 
-echo "📤 Pulling kubeconfig to local machine..."
-MASTER_IP=$(grep ansible_host ../${CONTROL_PLANE_INI} | head -n1 | cut -d= -f2)
-scp -i "$SSH_KEY" ${SSH_USER}@${MASTER_IP}:/etc/kubernetes/admin.conf ~/.kube/config
-chmod 600 ~/.kube/config
-
 echo "✅ Control plane deployed and kubeconfig downloaded!"
