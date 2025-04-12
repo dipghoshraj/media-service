@@ -1,0 +1,35 @@
+#!/bin/bash
+set -e
+
+CLUSTER_NAME="mycluster"
+INVENTORY_DIR="./inventory/${CLUSTER_NAME}"
+CONTROL_PLANE_INI="${INVENTORY_DIR}/control-plane.ini"
+SSH_KEY="$HOME/.ssh/id_rsa"
+SSH_USER="ubuntu"
+
+echo "📦 Installing dependencies..."
+sudo apt update && sudo apt install -y python3-pip sshpass git
+pip3 install --user ansible
+export PATH="$HOME/.local/bin:$PATH"
+
+echo "📥 Cloning Kubespray..."
+git clone https://github.com/kubernetes-sigs/kubespray.git --depth 1 || true
+cd kubespray
+pip3 install -r requirements.txt
+
+echo "📂 Preparing control-plane inventory..."
+cp -rfp inventory/sample inventory/${CLUSTER_NAME}
+cp ../${CONTROL_PLANE_INI} inventory/${CLUSTER_NAME}/inventory.ini
+
+echo "🚀 Deploying control-plane nodes..."
+ansible-playbook -i inventory/${CLUSTER_NAME}/inventory.ini \
+  --private-key=${SSH_KEY} \
+  -u ${SSH_USER} \
+  cluster.yml -b -v
+
+echo "📤 Pulling kubeconfig to local machine..."
+MASTER_IP=$(grep ansible_host ../${CONTROL_PLANE_INI} | head -n1 | cut -d= -f2)
+scp -i "$SSH_KEY" ${SSH_USER}@${MASTER_IP}:/etc/kubernetes/admin.conf ~/.kube/config
+chmod 600 ~/.kube/config
+
+echo "✅ Control plane deployed and kubeconfig downloaded!"
