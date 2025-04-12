@@ -25,7 +25,7 @@ cp -rfp inventory/sample inventory/${CLUSTER_NAME}
 cp ../${CONTROL_PLANE_INI} inventory/${CLUSTER_NAME}/inventory.ini
 
 echo "🚀 Deploying control-plane nodes..."
-ansible-playbook -i ${CONTROL_PLANE_INI} \
+ansible-playbook -i inventory/${CLUSTER_NAME}/inventory.ini \
   --private-key=${SSH_KEY} \
   -u ${SSH_USER} \
   cluster.yml -b -v
