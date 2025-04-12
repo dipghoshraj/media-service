@@ -1,11 +1,14 @@
 #!/bin/bash
 set -e
 
-CLUSTER_NAME="mycluster"
+CLUSTER_NAME="subcontinent"
 INVENTORY_DIR="./inventory/${CLUSTER_NAME}"
 CONTROL_PLANE_INI="${INVENTORY_DIR}/control-plane.ini"
 SSH_KEY="$HOME/.ssh/id_rsa"
 SSH_USER="ubuntu"
+
+echo "🛠️  Preparing environment..."
+sudo apt install -y python3-pip
 
 echo "📦 Installing dependencies..."
 sudo apt update && sudo apt install -y python3-pip sshpass git
