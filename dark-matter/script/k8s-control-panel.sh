@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 
-CLUSTER_NAME="subcontinent"
+CLUSTER_NAME="europe"
 INVENTORY_DIR="./inventory/${CLUSTER_NAME}"
-CONTROL_PLANE_INI="${INVENTORY_DIR}/control-plane.ini"
+CONTROL_PLANE_INI="${INVENTORY_DIR}/control_panel.ini"
 SSH_KEY="$HOME/.ssh/id_rsa"
 SSH_USER="ubuntu"
 
