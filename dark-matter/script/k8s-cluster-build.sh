@@ -38,6 +38,9 @@ cp ../inventory/mycluster/inventory.ini inventory/mycluster/inventory.ini
 # echo "🔑 SSH keys copied to all nodes."
 
 echo "🚀 Running the playbook..."
-ansible-playbook -i inventory/mycluster/inventory.ini cluster.yml -b --become-user=root
+ansible-playbook -i inventory/${CLUSTER_NAME}/inventory.ini \
+  --private-key=${SSH_PRIVATE_KEY} \
+  -u ${SSH_USER} \
+  cluster.yml -b -v
 
 echo "✅ Kubernetes cluster is set up!"
