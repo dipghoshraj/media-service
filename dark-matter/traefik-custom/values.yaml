@@ -1,0 +1,16 @@
+replicaCount: 1
+
+image:
+  repository: traefik
+  tag: v2.10
+  pullPolicy: IfNotPresent
+
+service:
+  type: LoadBalancer
+  port: 80
+
+dashboard:
+  enabled: true
+  domain: traefik.localhost
+
+resources: {}
