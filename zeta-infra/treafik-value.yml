@@ -63,3 +63,6 @@ tls:
     default:
       defaultCertificate:
         secretName: "default-cert"
+
+
+# helm install traefik traefik/traefik --namespace kube-system --set service.type=LoadBalancer --set service.spec.loadBalancerIP=3.110.207.192 --set ports.web.port=80 --set ports.websecure.port=443
