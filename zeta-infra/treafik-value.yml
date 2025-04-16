@@ -1,46 +1,65 @@
-# traefik-values.yaml
+# Global configuration
+global:
+  checkNewVersion: true
+  sendAnonymousUsage: true
 
-service:
-  type: NodePort
-  ports:
-    web:
-      port: 80
-      nodePort: 30080
-    websecure:
-      port: 443
-      nodePort: 30443
-    traefik:
-      port: 9000
-      nodePort: 30090
+# Traefik Dashboard and API settings
+api:
+  dashboard: true         # Enable the Traefik dashboard
+  insecure: true          # Allow access to the dashboard without authentication (For testing purposes)
+  entryPoint: "traefik"   # Dashboard will be exposed through the "traefik" entry point
 
-ports:
+# EntryPoint Configuration (Expose ports for Traefik's web, websecure, and dashboard)
+entryPoints:
   web:
-    expose: true
-    exposedPort: 80
-    protocol: TCP
+    address: ":80"         # Expose HTTP traffic on port 80
   websecure:
-    expose: true
-    exposedPort: 443
-    protocol: TCP
-    tls:
-      enabled: true
+    address: ":443"        # Expose HTTPS traffic on port 443
   traefik:
-    expose: true
-    exposedPort: 9000
-    protocol: TCP
+    address: ":9000"       # Traefik dashboard accessible on port 9000
 
+# Ingress controller settings
 ingressRoute:
   dashboard:
-    enabled: true
+    enabled: true          # Expose the dashboard via an ingressRoute
+    entryPoint: traefik    # Dashboard ingress should use the "traefik" entryPoint
 
-# Enables CRDs for Middleware, IngressRoute, etc.
-additionalArguments:
-  - "--api.dashboard=true"
-  - "--entrypoints.web.address=:80"
-  - "--entrypoints.websecure.address=:443"
-  - "--entrypoints.traefik.address=:9000"
+# Health checks (adjust delay and failure thresholds)
+livenessProbe:
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  failureThreshold: 3
 
-# Creates a default IngressClass
-ingressClass:
+readinessProbe:
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  failureThreshold: 3
+
+# Resource limits for the Traefik pod (adjust based on your environment)
+resources:
+  limits:
+    cpu: "500m"            # 0.5 CPU core limit
+    memory: "512Mi"        # 512MB memory limit
+  requests:
+    cpu: "200m"            # 0.2 CPU core request
+    memory: "256Mi"        # 256MB memory request
+
+# Additional configurations (you can modify based on your needs)
+provider:
+  kubernetesIngress:
+    enabled: true          # Enable Kubernetes ingress provider
+  kubernetesCRD:
+    enabled: true          # Enable Kubernetes CRD provider
+    allowEmptyServices: true
+
+# Dashboard Settings
+dashboard:
   enabled: true
-  isDefaultClass: true
+  domain: "traefik.agnistack.online"  # Set your domain for the dashboard (ensure DNS is configured)
+
+# TLS settings for websecure entry point
+tls:
+  stores:
+    default:
+      defaultCertificate:
+        secretName: "default-cert"
