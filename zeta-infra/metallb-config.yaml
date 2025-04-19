@@ -6,7 +6,7 @@ metadata:
   name: public-ips
 spec:
   addresses:
-    - 3.109.54.172/32
+    - 3.110.50.81/32
 ---
 apiVersion: metallb.io/v1beta1
 kind: L2Advertisement
