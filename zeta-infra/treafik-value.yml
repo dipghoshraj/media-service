@@ -1,68 +1,26 @@
-# Global configuration
-global:
-  checkNewVersion: true
-  sendAnonymousUsage: true
+service:
+  type: LoadBalancer
+  spec:
+    loadBalancerIP: 3.109.54.172
 
-# Traefik Dashboard and API settings
-api:
-  dashboard: true         # Enable the Traefik dashboard
-  insecure: true          # Allow access to the dashboard without authentication (For testing purposes)
-  entryPoint: "traefik"   # Dashboard will be exposed through the "traefik" entry point
-
-# EntryPoint Configuration (Expose ports for Traefik's web, websecure, and dashboard)
-entryPoints:
+ports:
   web:
-    address: ":80"         # Expose HTTP traffic on port 80
+    port: 80
   websecure:
-    address: ":443"        # Expose HTTPS traffic on port 443
-  traefik:
-    address: ":9000"       # Traefik dashboard accessible on port 9000
+    port: 443
 
-# Ingress controller settings
-ingressRoute:
-  dashboard:
-    enabled: true          # Expose the dashboard via an ingressRoute
-    entryPoint: traefik    # Dashboard ingress should use the "traefik" entryPoint
+additionalArguments:
+  - "--ping"
 
-# Health checks (adjust delay and failure thresholds)
+metrics:
+  prometheus:
+    enabled: false
+
+dashboards:
+  enabled: false
+
 livenessProbe:
-  initialDelaySeconds: 30
-  periodSeconds: 10
-  failureThreshold: 3
+  enabled: true
 
 readinessProbe:
-  initialDelaySeconds: 30
-  periodSeconds: 10
-  failureThreshold: 3
-
-# Resource limits for the Traefik pod (adjust based on your environment)
-resources:
-  limits:
-    cpu: "500m"            # 0.5 CPU core limit
-    memory: "512Mi"        # 512MB memory limit
-  requests:
-    cpu: "200m"            # 0.2 CPU core request
-    memory: "256Mi"        # 256MB memory request
-
-# Additional configurations (you can modify based on your needs)
-provider:
-  kubernetesIngress:
-    enabled: true          # Enable Kubernetes ingress provider
-  kubernetesCRD:
-    enabled: true          # Enable Kubernetes CRD provider
-    allowEmptyServices: true
-
-# Dashboard Settings
-dashboard:
   enabled: true
-  domain: "traefik.agnistack.online"  # Set your domain for the dashboard (ensure DNS is configured)
-
-# TLS settings for websecure entry point
-tls:
-  stores:
-    default:
-      defaultCertificate:
-        secretName: "default-cert"
-
-
-# helm install traefik traefik/traefik --namespace kube-system --set service.type=LoadBalancer --set service.spec.loadBalancerIP=3.110.207.192 --set ports.web.port=80 --set ports.websecure.port=443
