@@ -42,7 +42,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-    - host: app1.localhost
+    - host: app1.agnistack.online
       http:
         paths:
           - path: /
