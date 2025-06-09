@@ -1,6 +1,0 @@
-apiVersion: v2
-name: traefik-custom
-description: A Helm chart for deploying Traefik
-type: application
-version: 0.1.0
-appVersion: "2.10"
