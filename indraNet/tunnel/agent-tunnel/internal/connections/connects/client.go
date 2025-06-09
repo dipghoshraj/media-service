@@ -2,6 +2,8 @@ package connects
 
 import (
 	"agent-tunnel/internal/types"
+	"fmt"
+	"time"
 
 	"github.com/gorilla/websocket"
 )
@@ -14,9 +16,9 @@ type TunnelClient struct {
 	close chan struct{}
 }
 
-// func generateNonce() string {
-// 	return fmt.Sprintf("%d", time.Now().UnixNano())
-// }
+func generateNonce() string {
+	return fmt.Sprintf("%d", time.Now().UnixNano())
+}
 
 func NewTunnelClient(cfg ClientConfig) (*TunnelClient, error) {
 	return &TunnelClient{
