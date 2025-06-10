@@ -2,6 +2,7 @@ package connects
 
 import (
 	"agent-tunnel/proto"
+	"context"
 	"fmt"
 	"time"
 
@@ -10,7 +11,7 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-func (c *TunnelClient) Handshake() error {
+func (c *TunnelClient) Handshake(ctx context.Context) error {
 	nonce := generateNonce()
 	timestamp := time.Now().Unix()
 

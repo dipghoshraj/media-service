@@ -1,27 +1,61 @@
 package connects
 
 import (
+	"agent-tunnel/proto"
 	"context"
+	"fmt"
 	"log"
+	"time"
 
 	"github.com/gorilla/websocket"
 )
 
 func (c *TunnelClient) Start(ctx context.Context) error {
-	var dialer websocket.Dialer
+	for {
+		err := c.runSessions(ctx)
+		if err != nil {
+			log.Printf("Session ended: %v, reconnecting...", err)
+			select {
+			case <-ctx.Done():
+				return ctx.Err()
+			case <-time.After(5 * time.Second): // TODO: use exponential backoff
+			}
+		} else {
+			return nil // exited cleanly
+		}
+	}
+}
 
-	conn, _, err := dialer.DialContext(ctx, c.cfg.GatewayURL, nil)
+func (c *TunnelClient) runSessions(ctx context.Context) error {
+	conn, _, err := websocket.DefaultDialer.DialContext(ctx, c.cfg.GatewayURL, nil)
+
 	if err != nil {
-		log.Printf("Failed to connect to gateway: %v", err)
-		return err
+		return fmt.Errorf("connect to gateway: %w", err)
+	}
+	c.conn = conn
+	defer conn.Close()
+
+	if err := c.Handshake(ctx); err != nil {
+		return fmt.Errorf("handshake failed: %w", err)
 	}
 
-	c.conn = conn
-	log.Printf("Connected to gateway: %s", c.cfg.GatewayURL)
+	msgs := make(chan *proto.Envelope)
+	errs := make(chan error, 2)
 
-	// Need to be logic for the long lived connection and handshake process
+	// go c.readLoop(ctx, msgs, errs)
+	// go c.heartbeatLoop(ctx, errs)
 
-	close(c.close)
-	return nil
-
+	for {
+		select {
+		case msg := <-msgs:
+			// if err := c.handleMessage(ctx, msg); err != nil {
+			// 	log.Printf("error handling message: %v", err)
+			// }
+			log.Printf("Received message: %v", msg)
+		case err := <-errs:
+			return err
+		case <-ctx.Done():
+			return ctx.Err()
+		}
+	}
 }
