@@ -38,11 +38,23 @@ message ControlMessage {
   string payload = 2;
 }
 
+message TunnelData {
+  string id = 1;
+  bytes chunk = 2;
+}
+
+message TunnelClose {
+  string id = 1;
+}
+
+
 message Envelope {
   oneof message {
     ConnectRequest connect = 1;
     TunnelRequest request = 2;
     TunnelResponse response = 3;
     ControlMessage control = 4;
+    TunnelData data = 5;
+    TunnelClose close = 6;
   }
 }

@@ -33,4 +33,6 @@ func init() {
 	connectCmd.MarkFlagRequired("secret")
 	connectCmd.MarkFlagRequired("id")
 
+	rootCmd.AddCommand(connectCmd)
+
 }
