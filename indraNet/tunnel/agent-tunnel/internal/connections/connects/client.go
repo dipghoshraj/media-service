@@ -13,12 +13,12 @@ import (
 type ClientConfig = types.ClientConfig
 
 type TunnelClient struct {
-	cfg   ClientConfig
+	Cfg   ClientConfig
 	conn  *websocket.Conn
-	close chan struct{}
+	Close chan struct{}
 
 	mu      sync.Mutex
-	streams map[string]net.Conn // Stream ID → local TCP conn
+	Streams map[string]net.Conn // Stream ID → local TCP conn
 }
 
 func generateNonce() string {
@@ -27,7 +27,7 @@ func generateNonce() string {
 
 func NewTunnelClient(cfg ClientConfig) (*TunnelClient, error) {
 	return &TunnelClient{
-		cfg:   cfg,
-		close: make(chan struct{}),
+		Cfg:   cfg,
+		Close: make(chan struct{}),
 	}, nil
 }

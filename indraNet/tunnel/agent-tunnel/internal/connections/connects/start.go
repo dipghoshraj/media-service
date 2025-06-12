@@ -28,13 +28,13 @@ func (c *TunnelClient) Start(ctx context.Context) error {
 }
 
 func (c *TunnelClient) runSessions(ctx context.Context) error {
-	conn, _, err := websocket.DefaultDialer.DialContext(ctx, c.cfg.GatewayURL, nil)
+	conn, _, err := websocket.DefaultDialer.DialContext(ctx, c.Cfg.GatewayURL, nil)
 
 	if err != nil {
 		return fmt.Errorf("connect to gateway: %w", err)
 	}
 	c.conn = conn
-	c.streams = make(map[string]net.Conn)
+	c.Streams = make(map[string]net.Conn)
 
 	defer conn.Close()
 
@@ -45,15 +45,15 @@ func (c *TunnelClient) runSessions(ctx context.Context) error {
 	msgs := make(chan *proto.Envelope)
 	errs := make(chan error, 2)
 
-	// go c.readLoop(ctx, msgs, errs)
+	go c.readLoop(ctx, msgs, errs)
 	// go c.heartbeatLoop(ctx, errs)
 
 	for {
 		select {
 		case msg := <-msgs:
-			// if err := c.handleMessage(ctx, msg); err != nil {
-			// 	log.Printf("error handling message: %v", err)
-			// }
+			if err := c.handleMessage(ctx, msg); err != nil {
+				log.Printf("error handling message: %v", err)
+			}
 			log.Printf("Received message: %v", msg)
 		case err := <-errs:
 			return err

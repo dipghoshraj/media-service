@@ -1,6 +1,13 @@
 package cmd
 
-import "github.com/spf13/cobra"
+import (
+	"agent-tunnel/internal/connections/connects"
+	"context"
+	"log"
+	"net"
+
+	"github.com/spf13/cobra"
+)
 
 var (
 	gatewayURL string
@@ -14,10 +21,26 @@ var connectCmd = &cobra.Command{
 	Short: "Connect and authenticate to the agent tunnel",
 	Long:  `This command establishes and authenticates a connection to the agent tunnel, allowing you to interact with the IndraNet network.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// Here you would typically implement the logic to connect to the agent tunnel
-		// For now, we will just print a message
-		println("Connecting to the agent tunnel...")
-		// Add connection logic here
+		log.Println("🔌 Connecting to the agent tunnel...")
+
+		client := &connects.TunnelClient{
+			Cfg: connects.ClientConfig{
+				GatewayURL: gatewayURL,
+				Token:      token,
+				Secret:     secret,
+				AgentID:    agentID,
+			},
+			Close:   make(chan struct{}),
+			Streams: make(map[string]net.Conn),
+		}
+
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		if err := client.Start(ctx); err != nil {
+			log.Fatalf("❌ Tunnel client exited: %v", err)
+		}
+
 	},
 }
 

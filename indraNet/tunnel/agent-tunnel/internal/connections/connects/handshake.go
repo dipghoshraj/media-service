@@ -15,12 +15,12 @@ func (c *TunnelClient) Handshake(ctx context.Context) error {
 	nonce := generateNonce()
 	timestamp := time.Now().Unix()
 
-	msg := fmt.Sprintf("%s:%d:%s", c.cfg.Token, timestamp, nonce)
+	msg := fmt.Sprintf("%s:%d:%s", c.Cfg.Token, timestamp, nonce)
 	signature := c.signature(msg)
 
 	connectReq := &proto.ConnectRequest{
-		AgentId:   c.cfg.AgentID,
-		Token:     c.cfg.Token,
+		AgentId:   c.Cfg.AgentID,
+		Token:     c.Cfg.Token,
 		Timestamp: timestamp,
 		Nonce:     nonce,
 		Signature: signature,
