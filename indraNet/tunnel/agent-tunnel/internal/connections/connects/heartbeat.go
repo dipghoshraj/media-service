@@ -1,4 +1,4 @@
-package loops
+package connects
 
 func HeartbeatLoop() {
 	// Placeholder for the heartbeat loop logic

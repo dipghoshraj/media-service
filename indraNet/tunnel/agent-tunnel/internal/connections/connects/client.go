@@ -3,6 +3,8 @@ package connects
 import (
 	"agent-tunnel/internal/types"
 	"fmt"
+	"net"
+	"sync"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -14,6 +16,9 @@ type TunnelClient struct {
 	cfg   ClientConfig
 	conn  *websocket.Conn
 	close chan struct{}
+
+	mu      sync.Mutex
+	streams map[string]net.Conn // Stream ID → local TCP conn
 }
 
 func generateNonce() string {

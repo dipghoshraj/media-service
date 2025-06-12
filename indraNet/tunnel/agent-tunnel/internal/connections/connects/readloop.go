@@ -1,4 +1,4 @@
-package loops
+package connects
 
 func readLoop() {
 	// Placeholder for the read loop logic

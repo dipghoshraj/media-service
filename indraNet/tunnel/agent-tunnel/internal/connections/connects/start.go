@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -33,6 +34,8 @@ func (c *TunnelClient) runSessions(ctx context.Context) error {
 		return fmt.Errorf("connect to gateway: %w", err)
 	}
 	c.conn = conn
+	c.streams = make(map[string]net.Conn)
+
 	defer conn.Close()
 
 	if err := c.Handshake(ctx); err != nil {
