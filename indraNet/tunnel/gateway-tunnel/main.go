@@ -1,17 +1,16 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+	"net/http"
+)
 
 func main() {
-	// Initialize the gateway tunnel
-	fmt.Println("Starting Gateway Tunnel...")
 
-	// Here you would typically set up your network connections, handlers, etc.
-	// For example:
-	// - Listen for incoming connections
-	// - Handle requests from clients
-	// - Forward messages to the appropriate destinations
+	http.HandleFunc("/ws", websocketHandler)
 
-	// This is a placeholder for the actual implementation
-	fmt.Println("Gateway Tunnel is running. Waiting for connections...")
+	fmt.Println("Server started at :8080")
+	log.Fatal(http.ListenAndServe(":8080", nil))
+
 }
