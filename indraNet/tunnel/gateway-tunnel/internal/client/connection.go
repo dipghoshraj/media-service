@@ -15,7 +15,7 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-func websocketHandler(w http.ResponseWriter, r *http.Request) {
+func WebsocketHandler(w http.ResponseWriter, r *http.Request) {
 	// Upgrade the HTTP connection to a WebSocket connection
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
