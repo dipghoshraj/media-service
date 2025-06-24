@@ -9,14 +9,23 @@ import (
 
 // Configure the upgrader
 var upgrader = websocket.Upgrader{
-	CheckOrigin: func(r *http.Request) bool {
-		// Allow all connections by default
-		return true
-	},
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+	CheckOrigin:     func(r *http.Request) bool { return true },
 }
 
 func WebsocketHandler(w http.ResponseWriter, r *http.Request) {
 	// Upgrade the HTTP connection to a WebSocket connection
+
+	token := r.URL.Query().Get("token")
+	sig := r.URL.Query().Get("sig")
+
+	if !verifyToken(token, sig) {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		log.Println("Unauthorized access attempt")
+		return
+	}
+
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println("Upgrade error:", err)
