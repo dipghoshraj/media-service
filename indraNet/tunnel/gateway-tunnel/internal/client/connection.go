@@ -3,8 +3,14 @@ package client
 import (
 	"log"
 	"net/http"
+	"time"
+
+	pb "gateway-tunnel/proto"
+
+	"gateway-tunnel/internal/client/session"
 
 	"github.com/gorilla/websocket"
+	protobuf "google.golang.org/protobuf/proto"
 )
 
 // Configure the upgrader
@@ -17,15 +23,6 @@ var upgrader = websocket.Upgrader{
 func WebsocketHandler(w http.ResponseWriter, r *http.Request) {
 	// Upgrade the HTTP connection to a WebSocket connection
 
-	token := r.URL.Query().Get("token")
-	sig := r.URL.Query().Get("sig")
-
-	if !verifyToken(token, sig) {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
-		log.Println("Unauthorized access attempt")
-		return
-	}
-
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println("Upgrade error:", err)
@@ -33,23 +30,46 @@ func WebsocketHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer conn.Close()
 
-	log.Println("Client connected:", conn.RemoteAddr())
-
-	for {
-		// Read message from the client
-		_, msg, err := conn.ReadMessage()
-		if err != nil {
-			log.Println("Read error:", err)
-			break
-		}
-
-		log.Printf("Received message: %s", msg)
-
-		// Echo the message back to the client
-		err = conn.WriteMessage(websocket.TextMessage, msg)
-		if err != nil {
-			log.Println("Write error:", err)
-			break
-		}
+	_, msgBytes, err := conn.ReadMessage()
+	if err != nil {
+		log.Println("Handshake failed:", err)
+		return
 	}
+
+	var envalop pb.Envelope
+	if err := protobuf.Unmarshal(msgBytes, &envalop); err != nil {
+		conn.WriteMessage(websocket.TextMessage, []byte("Invalid envelope"))
+		conn.Close()
+		log.Println("Failed to unmarshal envelope:", err)
+		return
+	}
+
+	connectMsg, ok := envalop.Message.(*pb.Envelope_Connect)
+	if !ok {
+		conn.WriteMessage(websocket.TextMessage, []byte("Invalid connect message"))
+		conn.Close()
+		log.Println("Invalid connect message type")
+		return
+	}
+
+	req := connectMsg.Connect
+	if !verifyToken(req.Token, req.Signature) {
+		conn.WriteMessage(websocket.TextMessage, []byte("Invalid token or signature"))
+		conn.Close()
+		log.Println("Invalid token or signature")
+		return
+	}
+
+	agentSession := &session.AgentSession{
+		AppID:    req.AgentId,
+		Conn:     conn,
+		SendChan: make(chan *pb.TunnelRequest, 10),
+		LastSeen: time.Now(),
+	}
+
+	session.Registry.Register(req.AgentId, agentSession)
+
+	log.Printf("Agent [%s] connected", req.AgentId)
+	// go readLoop(sess)
+	// go writeLoop(sess)
 }
