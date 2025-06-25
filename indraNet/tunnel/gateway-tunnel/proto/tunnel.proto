@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package tunnel.v1;
 
-option go_package = "agent-tunnel/proto";
+option go_package = "gateway-tunnel/proto";
 
 message ConnectRequest {
   string agent_id = 1;
