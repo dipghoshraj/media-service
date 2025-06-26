@@ -12,6 +12,11 @@ message ConnectRequest {
   string signature = 5;
 }
 
+message ConnectError {
+  string agent_id = 1;
+  string error = 2;
+}
+
 message TunnelRequest {
   string id = 1;
   string method = 2;
@@ -56,5 +61,6 @@ message Envelope {
     ControlMessage control = 4;
     TunnelData data = 5;
     TunnelClose close = 6;
+    ConnectError connect_error = 7;
   }
 }

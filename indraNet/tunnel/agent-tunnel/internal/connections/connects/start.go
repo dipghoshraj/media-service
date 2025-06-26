@@ -34,6 +34,10 @@ func (c *TunnelClient) runSessions(ctx context.Context) error {
 		return fmt.Errorf("connect to gateway: %w", err)
 	}
 	c.conn = conn
+	c.conn.SetCloseHandler(func(code int, text string) error {
+		log.Printf("WebSocket closed: code=%d, text=%s", code, text)
+		return nil
+	})
 	c.Streams = make(map[string]net.Conn)
 
 	defer conn.Close()
