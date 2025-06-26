@@ -70,6 +70,8 @@ func WebsocketHandler(w http.ResponseWriter, r *http.Request) {
 	session.Registry.Register(req.AgentId, agentSession)
 
 	log.Printf("Agent [%s] connected", req.AgentId)
-	// go readLoop(sess)
-	// go writeLoop(sess)
+	// go readLoop(agentSession)
+	// go writeLoop(agentSession)
+
+	select {}
 }
