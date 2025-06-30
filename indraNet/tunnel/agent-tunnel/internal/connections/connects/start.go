@@ -46,6 +46,8 @@ func (c *TunnelClient) runSessions(ctx context.Context) error {
 		return fmt.Errorf("handshake failed: %w", err)
 	}
 
+	log.Printf("Connected to gateway: %s", c.Cfg.GatewayURL)
+
 	msgs := make(chan *proto.Envelope)
 	errs := make(chan error, 2)
 
