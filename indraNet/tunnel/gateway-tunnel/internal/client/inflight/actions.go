@@ -38,14 +38,10 @@ func (m *inFlightManager) Resolve(id string, resp *pb.TunnelResponse) {
 	m.Unlock()
 
 	for k, v := range resp.Headers {
-		req.writer.Header().Set(k, v)
+		for _, vv := range v {
+			req.writer.Header().Add(k, string(vv))
+		}
 	}
-
-	// for k, v := range resp.Headers {
-	// 	for _, vv := range v {
-	// 		req.writer.Header().Add(k, string(vv))
-	// 	}
-	// }
 	req.writer.WriteHeader(int(resp.Status))
 	_, _ = req.writer.Write(resp.Body)
 
@@ -100,20 +96,30 @@ func (m *inFlightManager) get(id string) (*inFlightRequest, bool) {
 func (m *inFlightManager) StreamToClient(id string) {
 	req, ok := m.get(id)
 	if !ok {
-		log.Printf("Cannot stream: unknown stream ID: %s", id)
 		return
 	}
-	defer m.Close(id)
+
+	defer func() {
+		if r := recover(); r != nil {
+			log.Printf("panic in StreamToClient: %v", r)
+		}
+		m.Close(id)
+	}()
 
 	for chunk := range req.bodyBuf {
-		if _, err := req.writer.Write(chunk); err != nil {
-			log.Printf("Write to client failed for stream %s: %v", id, err)
+		if req.writer == nil {
+			log.Printf("Writer is nil for stream %s", id)
 			return
 		}
-		// Important to flush streamed data
+
+		_, err := req.writer.Write(chunk)
+		if err != nil {
+			log.Printf("Write error: %v", err)
+			return
+		}
+
 		if f, ok := req.writer.(http.Flusher); ok {
 			f.Flush()
 		}
-		log.Printf("Flushed %d bytes to client [stream: %s]", len(chunk), id)
 	}
 }
