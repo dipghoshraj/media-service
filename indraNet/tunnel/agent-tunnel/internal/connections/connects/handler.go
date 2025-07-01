@@ -4,6 +4,7 @@ import (
 	"agent-tunnel/proto"
 	"context"
 	"fmt"
+	"io"
 	"log"
 	"net"
 
@@ -12,6 +13,7 @@ import (
 )
 
 func (c *TunnelClient) handleMessage(ctx context.Context, msg *proto.Envelope) error {
+
 	switch m := msg.Message.(type) {
 	case *proto.Envelope_Request:
 		return c.handleConnect(ctx, m.Request)
@@ -28,9 +30,9 @@ func (c *TunnelClient) handleMessage(ctx context.Context, msg *proto.Envelope) e
 	return nil
 }
 
-func (c *TunnelClient) handleConnect(ctx context.Context, req *proto.TunnelRequest) error {
+func (c *TunnelClient) handleConnect(_ context.Context, req *proto.TunnelRequest) error {
 
-	conn, err := net.Dial("tcp", "localhost:8000")
+	conn, err := net.Dial("tcp", "localhost:8081")
 	if err != nil {
 		return fmt.Errorf("dial [ERROR]: %w", err)
 	}
@@ -50,7 +52,7 @@ func (c *TunnelClient) handleConnect(ctx context.Context, req *proto.TunnelReque
 	return nil
 }
 
-func (c *TunnelClient) handleStream(ctx context.Context, chunk *proto.TunnelData) error {
+func (c *TunnelClient) handleStream(_ context.Context, chunk *proto.TunnelData) error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
@@ -64,7 +66,7 @@ func (c *TunnelClient) handleStream(ctx context.Context, chunk *proto.TunnelData
 	return nil
 }
 
-func (c *TunnelClient) handleClose(ctx context.Context, closeMsg *proto.TunnelClose) error {
+func (c *TunnelClient) handleClose(_ context.Context, closeMsg *proto.TunnelClose) error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
@@ -80,9 +82,19 @@ func (c *TunnelClient) pipeToLocal(id string, conn net.Conn) error {
 	for {
 		n, err := conn.Read(buf)
 		if err != nil {
-			if err != net.ErrClosed {
-				log.Printf("Error reading from stream %s: %v", id, err)
+			if err == io.EOF {
+				log.Printf("Stream %s reached EOF", id)
+
+				closeMsg := &proto.TunnelClose{Id: id}
+				env := &proto.Envelope{
+					Message: &proto.Envelope_Close{Close: closeMsg},
+				}
+				b, _ := protobuf.Marshal(env)
+				c.conn.WriteMessage(websocket.BinaryMessage, b)
+
+				return nil
 			}
+			log.Printf("Error reading from stream %s: %v", id, err)
 			return err
 		}
 
@@ -97,6 +109,5 @@ func (c *TunnelClient) pipeToLocal(id string, conn net.Conn) error {
 
 		b, _ := protobuf.Marshal(env)
 		c.conn.WriteMessage(websocket.BinaryMessage, b)
-
 	}
 }
