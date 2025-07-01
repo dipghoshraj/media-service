@@ -10,7 +10,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func readLoop(agenetSession *session.AgentSession) {
+func readLoop(agenetSession *session.AgentSession, done chan struct{}) {
 
 	defer func() {
 		log.Println("Read loop ended for session:", agenetSession.AppID)
@@ -22,6 +22,7 @@ func readLoop(agenetSession *session.AgentSession) {
 		_, msgByte, err := agenetSession.Conn.ReadMessage()
 		if err != nil {
 			log.Printf("Read error for session %s: %v", agenetSession.AppID, err)
+			done <- struct{}{}
 			return
 		}
 

@@ -53,6 +53,8 @@ func WebsocketHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	req := connectMsg.Connect
+	done := make(chan struct{})
+
 	if !verifyToken(req.Token, req.Signature) {
 		conn.WriteMessage(websocket.TextMessage, []byte("Invalid token or signature"))
 		conn.Close()
@@ -70,8 +72,12 @@ func WebsocketHandler(w http.ResponseWriter, r *http.Request) {
 	session.Registry.Register(req.AgentId, agentSession)
 
 	log.Printf("Agent [%s] connected", req.AgentId)
-	go readLoop(agentSession)
-	// go writeLoop(agentSession)
+	go readLoop(agentSession, done)
+	go writeLoop(agentSession, done)
 
-	select {}
+	<-done
+	session.Registry.Unregister(req.AgentId)
+	agentSession.Conn.Close()
+	close(agentSession.SendChan)
+	log.Printf("Agent [%s] disconnected", req.AgentId)
 }
