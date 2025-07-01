@@ -24,29 +24,29 @@ func (m *inFlightManager) Register(id string, w http.ResponseWriter) {
 }
 
 func (m *inFlightManager) Resolve(id string, resp *pb.TunnelResponse) {
-
-	m.Lock()
-
+	m.RLock()
 	req, ok := m.requests[id]
+	m.RUnlock()
+
 	if !ok {
-		m.Unlock()
 		log.Printf("Unknown response ID: %s", id)
 		return
 	}
 
-	delete(m.requests, id)
-	m.Unlock()
-
+	// Write headers
 	for k, v := range resp.Headers {
-		for _, vv := range v {
-			req.writer.Header().Add(k, string(vv))
+		req.writer.Header().Set(k, v)
+	}
+
+	// Write status code
+	req.writer.WriteHeader(int(resp.Status))
+
+	// Optional: write any small body chunk (most will come via TunnelData)
+	if len(resp.Body) > 0 {
+		if _, err := req.writer.Write(resp.Body); err != nil {
+			log.Printf("Error writing initial body chunk: %v", err)
 		}
 	}
-	req.writer.WriteHeader(int(resp.Status))
-	_, _ = req.writer.Write(resp.Body)
-
-	close(req.done)
-
 }
 
 func (m *inFlightManager) Close(id string) {

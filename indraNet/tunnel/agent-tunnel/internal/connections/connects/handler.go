@@ -2,11 +2,16 @@ package connects
 
 import (
 	"agent-tunnel/proto"
+	"bufio"
 	"context"
 	"fmt"
 	"io"
 	"log"
 	"net"
+	"net/http"
+	"strings"
+
+	pb "agent-tunnel/proto"
 
 	"github.com/gorilla/websocket"
 	protobuf "google.golang.org/protobuf/proto"
@@ -85,6 +90,31 @@ func (c *TunnelClient) handleClose(_ context.Context, closeMsg *proto.TunnelClos
 }
 
 func (c *TunnelClient) pipeToLocal(id string, conn net.Conn) error {
+	reader := bufio.NewReader(conn)
+	resp, err := http.ReadResponse(reader, nil)
+	if err != nil {
+		log.Printf("Failed to parse HTTP response: %v", err)
+		return err
+	}
+
+	// Step 1: send TunnelResponse
+	headers := make(map[string]string)
+	for k, v := range resp.Header {
+		headers[k] = strings.Join(v, ", ")
+	}
+
+	respMsg := &proto.TunnelResponse{
+		Id:      id,
+		Status:  int32(resp.StatusCode),
+		Headers: headers,
+	}
+
+	env := &proto.Envelope{
+		Message: &proto.Envelope_Response{Response: respMsg},
+	}
+
+	_ = c.send_envalope(env)
+
 	buf := make([]byte, 4096)
 	for {
 		n, err := conn.Read(buf)
@@ -96,8 +126,7 @@ func (c *TunnelClient) pipeToLocal(id string, conn net.Conn) error {
 				env := &proto.Envelope{
 					Message: &proto.Envelope_Close{Close: closeMsg},
 				}
-				b, _ := protobuf.Marshal(env)
-				c.conn.WriteMessage(websocket.BinaryMessage, b)
+				_ = c.send_envalope(env)
 
 				return nil
 			}
@@ -114,7 +143,17 @@ func (c *TunnelClient) pipeToLocal(id string, conn net.Conn) error {
 			Message: &proto.Envelope_Data{Data: dataMsg},
 		}
 
-		b, _ := protobuf.Marshal(env)
-		c.conn.WriteMessage(websocket.BinaryMessage, b)
+		_ = c.send_envalope(env)
 	}
+}
+
+func (c *TunnelClient) send_envalope(env *pb.Envelope) error {
+	b, err := protobuf.Marshal(env)
+	if err != nil {
+		return err
+	}
+
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	return c.conn.WriteMessage(websocket.BinaryMessage, b)
 }

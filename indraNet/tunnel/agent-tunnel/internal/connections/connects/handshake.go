@@ -5,10 +5,6 @@ import (
 	"context"
 	"fmt"
 	"time"
-
-	protobuf "google.golang.org/protobuf/proto"
-
-	"github.com/gorilla/websocket"
 )
 
 func (c *TunnelClient) Handshake(ctx context.Context) error {
@@ -32,14 +28,6 @@ func (c *TunnelClient) Handshake(ctx context.Context) error {
 		},
 	}
 
-	data, err := protobuf.Marshal(env)
-	if err != nil {
-		return fmt.Errorf("marshal connect request: %w", err)
-	}
-
-	err = c.conn.WriteMessage(websocket.BinaryMessage, data)
-	if err != nil {
-		return fmt.Errorf("write connect message: %w", err)
-	}
+	_ = c.send_envalope(env)
 	return nil
 }
