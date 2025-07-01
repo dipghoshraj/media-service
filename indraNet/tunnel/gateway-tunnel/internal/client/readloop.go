@@ -5,6 +5,8 @@ import (
 	pb "gateway-tunnel/proto"
 	"log"
 
+	"gateway-tunnel/internal/client/inflight"
+
 	"google.golang.org/protobuf/proto"
 )
 
@@ -31,9 +33,15 @@ func readLoop(agenetSession *session.AgentSession) {
 
 		switch msg := env.Message.(type) {
 		case *pb.Envelope_Response:
-			log.Printf("Received response for session %s: %s", agenetSession.AppID, msg.Response.Id)
+			inflight.InFlightManager.Resolve(msg.Response.Id, msg.Response)
+		case *pb.Envelope_Data:
+			inflight.InFlightManager.Stream(msg.Data.Id, msg.Data.Chunk)
+		case *pb.Envelope_Close:
+			inflight.InFlightManager.Close(msg.Close.Id)
+		// case *pb.Envelope_Control:
+		//     handleControl(msg.Control)
 		default:
-			log.Printf("Received unknown message type for session %s: %T", agenetSession.AppID, msg)
+			log.Printf("Unknown message type")
 		}
 	}
 }
