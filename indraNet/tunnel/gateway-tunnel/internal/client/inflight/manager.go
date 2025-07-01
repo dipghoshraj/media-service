@@ -11,7 +11,6 @@ type inFlightRequest struct {
 	bodyBuf chan []byte
 	done    chan struct{}
 }
-
 type inFlightManager struct {
 	sync.RWMutex
 	requests map[string]*inFlightRequest

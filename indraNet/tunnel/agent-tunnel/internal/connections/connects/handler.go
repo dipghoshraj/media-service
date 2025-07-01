@@ -32,7 +32,7 @@ func (c *TunnelClient) handleMessage(ctx context.Context, msg *proto.Envelope) e
 
 func (c *TunnelClient) handleConnect(_ context.Context, req *proto.TunnelRequest) error {
 
-	conn, err := net.Dial("tcp", "localhost:8081")
+	conn, err := net.Dial("tcp", "localhost:5000")
 	if err != nil {
 		return fmt.Errorf("dial [ERROR]: %w", err)
 	}
@@ -41,8 +41,15 @@ func (c *TunnelClient) handleConnect(_ context.Context, req *proto.TunnelRequest
 	c.Streams[req.Id] = conn
 	defer c.mu.Unlock()
 
+	// if len(req.Body) > 0 {
+	// 	conn.Write(req.Body)
+	// }
+
 	if len(req.Body) > 0 {
-		conn.Write(req.Body)
+		n, err := conn.Write(req.Body)
+		log.Printf("[handleConnect] Sent %d bytes to Flask app for stream %s, err=%v", n, req.Id, err)
+	} else {
+		log.Printf("[handleConnect] Request body is empty for stream %s", req.Id)
 	}
 
 	// Create a new TCP connection for the stream

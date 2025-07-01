@@ -38,10 +38,14 @@ func (m *inFlightManager) Resolve(id string, resp *pb.TunnelResponse) {
 	m.Unlock()
 
 	for k, v := range resp.Headers {
-		for _, vv := range v {
-			req.writer.Header().Add(k, string(vv))
-		}
+		req.writer.Header().Set(k, v)
 	}
+
+	// for k, v := range resp.Headers {
+	// 	for _, vv := range v {
+	// 		req.writer.Header().Add(k, string(vv))
+	// 	}
+	// }
 	req.writer.WriteHeader(int(resp.Status))
 	_, _ = req.writer.Write(resp.Body)
 
@@ -65,7 +69,7 @@ func (m *inFlightManager) Stream(id string, chunk []byte) {
 	req, ok := m.requests[id]
 	m.RUnlock()
 	if !ok {
-		log.Printf("Unknown stream ID: %s", id)
+		log.Printf("Unknown stream ID for streams: %s", id)
 		return
 	}
 	select {
@@ -79,4 +83,37 @@ func (m *inFlightManager) GetDoneChan(id string) <-chan struct{} {
 	m.RLock()
 	defer m.RUnlock()
 	return m.requests[id].done
+}
+
+func (m *inFlightManager) get(id string) (*inFlightRequest, bool) {
+	m.RLock()
+	defer m.RUnlock()
+
+	req, ok := m.requests[id]
+	if !ok {
+		log.Printf("Unknown stream ID: %s", id)
+		return nil, false
+	}
+	return req, true
+}
+
+func (m *inFlightManager) StreamToClient(id string) {
+	req, ok := m.get(id)
+	if !ok {
+		log.Printf("Cannot stream: unknown stream ID: %s", id)
+		return
+	}
+	defer m.Close(id)
+
+	for chunk := range req.bodyBuf {
+		if _, err := req.writer.Write(chunk); err != nil {
+			log.Printf("Write to client failed for stream %s: %v", id, err)
+			return
+		}
+		// Important to flush streamed data
+		if f, ok := req.writer.(http.Flusher); ok {
+			f.Flush()
+		}
+		log.Printf("Flushed %d bytes to client [stream: %s]", len(chunk), id)
+	}
 }
