@@ -74,3 +74,9 @@ func (m *inFlightManager) Stream(id string, chunk []byte) {
 		log.Printf("Stream buffer full for: %s", id)
 	}
 }
+
+func (m *inFlightManager) GetDoneChan(id string) <-chan struct{} {
+	m.RLock()
+	defer m.RUnlock()
+	return m.requests[id].done
+}
