@@ -16,7 +16,7 @@ func init() {
 	// Initialize the RDB package
 	// This is a placeholder for any initialization logic needed for the RDB package
 	rdb = redis.NewClient(&redis.Options{
-		Addr:     "3.109.58.10:6379", // Replace with your Redis server address
+		Addr:     "65.2.142.37:6379", // Replace with your Redis server address
 		Password: "",                 // No password set
 		DB:       0,                  // Use default DB
 	})
