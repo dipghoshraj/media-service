@@ -31,7 +31,7 @@ func (c *TunnelClient) Start(ctx context.Context) error {
 
 func (c *TunnelClient) runSessions(ctx context.Context) error {
 
-	wsurl := fmt.Sprintf("ws://%s/ws", c.Cfg.GatewayURL)
+	wsurl := fmt.Sprintf("ws://%s:50050/ws", c.Cfg.GatewayURL)
 	conn, _, err := websocket.DefaultDialer.DialContext(ctx, wsurl, nil)
 
 	persist.SetAgent(c.Cfg.AgentID, c.Cfg.GatewayURL)
@@ -75,3 +75,6 @@ func (c *TunnelClient) runSessions(ctx context.Context) error {
 		}
 	}
 }
+
+// 172.31.6.91:8080 - app1
+// 172.31.6.91:50051 - app2
