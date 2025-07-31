@@ -8,13 +8,6 @@ service TunnelService {
   rpc TunnelStream(stream Envelope) returns (stream Envelope);
 }
 
-// === Envelope wraps all message types ===
-syntax = "proto3";
-
-service TunnelService {
-  rpc TunnelStream(stream Envelope) returns (stream Envelope);
-}
-
 message ConnectRequest {
   string agent_id = 1;
   string token = 2;
