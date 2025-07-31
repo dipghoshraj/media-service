@@ -9,19 +9,12 @@ service TunnelService {
 }
 
 // === Envelope wraps all message types ===
-message Envelope {
-  oneof message {
-    ConnectRequest connect = 1;
-    TunnelRequest request = 2;
-    TunnelResponse response = 3;
-    ControlMessage control = 4;
-    TunnelData data = 5;
-    TunnelClose close = 6;
-    ConnectError connect_error = 7;
-  }
+syntax = "proto3";
+
+service TunnelService {
+  rpc TunnelStream(stream Envelope) returns (stream Envelope);
 }
 
-// === Agent auth handshake ===
 message ConnectRequest {
   string agent_id = 1;
   string token = 2;
@@ -30,25 +23,16 @@ message ConnectRequest {
   string signature = 5;
 }
 
-message ConnectError {
+message ConnectAck {
   string agent_id = 1;
-  string error = 2;
+  string message = 2;
 }
 
-// === Application layer tunneling ===
-message TunnelRequest {
+message TunnelOpen {
   string id = 1;
   string method = 2;
   string path = 3;
   map<string, string> headers = 4;
-  bytes body = 5;
-}
-
-message TunnelResponse {
-  string id = 1;
-  int32 status = 2;
-  map<string, string> headers = 3;
-  bytes body = 4;
 }
 
 message TunnelData {
@@ -58,17 +42,28 @@ message TunnelData {
 
 message TunnelClose {
   string id = 1;
+  string reason = 2;
 }
 
-message ControlMessage {
+message Control {
   enum Type {
-    UNKNOWN = 0;
-    PING = 1;
-    PONG = 2;
-    ERROR = 3;
+    PING = 0;
+    PONG = 1;
+    ERROR = 2;
   }
   Type type = 1;
   string payload = 2;
+}
+
+message Envelope {
+  oneof message {
+    ConnectRequest connect_request = 1;
+    ConnectAck connect_ack = 2;
+    TunnelOpen open = 3;
+    TunnelData data = 4;
+    TunnelClose close = 5;
+    Control control = 6;
+  }
 }
 
 
