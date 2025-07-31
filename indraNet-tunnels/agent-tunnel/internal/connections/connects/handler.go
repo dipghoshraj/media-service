@@ -45,10 +45,6 @@ func (c *TunnelClient) handleConnect(_ context.Context, req *pb.TunnelRequest) e
 	c.Streams[req.Id] = conn
 	defer c.mu.Unlock()
 
-	// if len(req.Body) > 0 {
-	// 	conn.Write(req.Body)
-	// }
-
 	if len(req.Body) > 0 {
 		n, err := conn.Write(req.Body)
 		log.Printf("[handleConnect] Sent %d bytes to Flask app for stream %s, err=%v", n, req.Id, err)
