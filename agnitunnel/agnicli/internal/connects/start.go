@@ -79,7 +79,7 @@ func (t *TunnelClient) runSession(ctx context.Context) error {
 			}
 		case <-ctx.Done():
 			log.Println("Context done, closing stream.")
-			return ctx.Err()
+			return nil // Exit gracefully
 		}
 	}
 
