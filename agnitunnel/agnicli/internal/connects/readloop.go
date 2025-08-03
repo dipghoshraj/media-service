@@ -11,6 +11,9 @@ func (t *TunnelClient) readLoop(ctx context.Context,
 	out chan<- *tunnelv1.Envelope,
 	errs chan<- error) {
 
+	defer close(errs)
+	defer close(out)
+
 	for {
 		msg, err := stream.Recv()
 		if err != nil {

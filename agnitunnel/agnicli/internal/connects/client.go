@@ -2,10 +2,10 @@ package connects
 
 import (
 	"agni-cli/internal/types"
-	"fmt"
+	"crypto/rand"
+	"encoding/hex"
 	"net"
 	"sync"
-	"time"
 
 	tunnelv1 "agni-cli/proto"
 )
@@ -21,8 +21,10 @@ type TunnelClient struct {
 	Streams map[string]net.Conn // Map of stream IDs to net.Conn
 }
 
-func generateNonce() string {
-	return fmt.Sprintf("%d", time.Now().UnixNano())
+func GenerateNonce(n int) string {
+	b := make([]byte, n)
+	_, _ = rand.Read(b)
+	return hex.EncodeToString(b)
 }
 
 func NewTunnelClient(cfg ClientConfig) (*TunnelClient, error) {
