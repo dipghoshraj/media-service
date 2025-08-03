@@ -66,7 +66,7 @@ func (t *TunnelClient) runSession(ctx context.Context) error {
 	msgs := make(chan *tunnelv1.Envelope)
 	errs := make(chan error, 2)
 
-	// t.readLoop(ctx)
+	go t.readLoop(ctx, t.stream, msgs, errs)
 
 	for {
 		select {
