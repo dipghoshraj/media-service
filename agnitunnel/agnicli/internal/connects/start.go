@@ -38,6 +38,8 @@ func (t *TunnelClient) runSession(ctx context.Context) error {
 		return fmt.Errorf("failed to create gRPC client: %w", err)
 	}
 
+	defer conn.Close()
+
 	client := tunnelv1.NewTunnelServiceClient(conn)
 	stream, err := client.TunnelStream(ctx)
 	if err != nil {
@@ -78,6 +80,7 @@ func (t *TunnelClient) runSession(ctx context.Context) error {
 				return fmt.Errorf("stream error: %w", err)
 			}
 		case <-ctx.Done():
+			t.stream.CloseSend()
 			log.Println("Context done, closing stream.")
 			return nil // Exit gracefully
 		}
