@@ -39,6 +39,12 @@ func (t *TunnelClient) runSession(ctx context.Context) error {
 	}
 
 	defer conn.Close()
+	defer func() {
+		if t.stream != nil {
+			t.stream.CloseSend()
+			log.Println("Stream closed.")
+		}
+	}()
 
 	client := tunnelv1.NewTunnelServiceClient(conn)
 	stream, err := client.TunnelStream(ctx)
@@ -54,8 +60,8 @@ func (t *TunnelClient) runSession(ctx context.Context) error {
 				AgentId:   t.Cfg.AgentID,
 				Token:     t.Cfg.Token,
 				Timestamp: time.Now().Unix(),
-				Nonce:     "xyz", // Add real nonce
-				Signature: "abc", // Add real signature
+				Nonce:     GenerateNonce(16), // Add real nonce
+				Signature: GenerateNonce(32), // Add real signature
 			},
 		},
 	}
@@ -65,7 +71,7 @@ func (t *TunnelClient) runSession(ctx context.Context) error {
 
 	log.Println("Connected to gateway successfully.")
 
-	msgs := make(chan *tunnelv1.Envelope)
+	msgs := make(chan *tunnelv1.Envelope, 10)
 	errs := make(chan error, 2)
 
 	go t.readLoop(ctx, t.stream, msgs, errs)
@@ -73,16 +79,15 @@ func (t *TunnelClient) runSession(ctx context.Context) error {
 	for {
 		select {
 		case <-msgs:
-			// Handle incoming messages
+			//TODO: Handle incoming messages
 		case err := <-errs:
 			if err != nil {
 				log.Printf("Error in stream: %v", err)
 				return fmt.Errorf("stream error: %w", err)
 			}
 		case <-ctx.Done():
-			t.stream.CloseSend()
-			log.Println("Context done, closing stream.")
-			return nil // Exit gracefully
+			log.Printf("Context canceled or timeout: %v", ctx.Err())
+			return ctx.Err()
 		}
 	}
 
