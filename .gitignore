@@ -173,3 +173,6 @@ cython_debug/
 nameing.txt
 test/before.jpeg
 test/index.html
+
+*/bin/*
+*/bin
