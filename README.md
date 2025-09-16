@@ -1,5 +1,5 @@
 # Agni Stack (Internal Network)
-**This service is under construction, and a light version of it is available in [this repository](https://github.com/dipghoshraj/ingress-tunnel)
+This service is under construction, and a light version of it is available in [this repository](https://github.com/dipghoshraj/ingress-tunnel)
 ## **Architecture Diagram**
 
 **Architecture and all other Documents have been moved to [git book ideation documentation
