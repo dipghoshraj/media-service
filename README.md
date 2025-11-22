@@ -1,13 +1,5 @@
-# Agni Stack (DFS)
-
-This is paas system which serves as a ondemand server or node which can depoy any docker image with a custome app domain with in a minutes
-## **Define Requirements**
-
-* Features: deployment, custome domain based access, scalablity
-* Workload: Read-heavy
-* Storage Type: Object storage
-* EntryPoint: Graphql apis
-
+# Agni Stack (Internal Network)
+This service is under construction, and a light version of it is available in [this repository](https://github.com/dipghoshraj/ingress-tunnel)
 ## **Architecture Diagram**
 
 **Architecture and all other Documents have been moved to [git book ideation documentation
