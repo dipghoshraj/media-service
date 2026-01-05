@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package tunnel.v2;
+
+option go_package = "agent-tunnel/proto/v2";
+
+service GatewayTunnel {
+  rpc Connect(stream Envelope) returns (stream Envelope);
+}
+
+
+message ConnectRequest {
+  string agent_id = 1;
+  string token = 2;
+  int64 timestamp = 3;
+  string nonce = 4;
+  string signature = 5;
+}
+
+message ConnectAck {
+  string agent_id = 1;
+  bool accepted = 2;
+  string error = 3;
+}
+
+message TunnelOpen {
+  string connection_id = 1;
+}
+
+message TunnelData {
+  string connection_id = 1;
+  bytes payload = 2;
+}
+
+message TunnelClose {
+  string connection_id = 1;
+  string reason = 2;
+}
+
+message ControlMessage {
+  enum Type {
+    UNKNOWN = 0;
+    PING = 1;
+    PONG = 2;
+    ERROR = 3;
+    BACKPRESSURE = 4;
+  }
+  Type type = 1;
+  string payload = 2;
+}
+
+
+message Envelope {
+  oneof message {
+    ConnectRequest connect = 1;
+    ConnectAck connect_ack = 2;
+
+    TunnelOpen open = 3;
+    TunnelData data = 4;
+    TunnelClose close = 5;
+
+    ControlMessage control = 6;
+  }
+}
