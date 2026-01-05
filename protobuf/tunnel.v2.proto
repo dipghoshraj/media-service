@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package tunnel.v2;
 
-option go_package = "agent-tunnel/proto/v2";
+option go_package = "agni-tunnels/proto/v2";
 
 service GatewayTunnel {
   rpc Connect(stream Envelope) returns (stream Envelope);
