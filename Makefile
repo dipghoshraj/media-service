@@ -1,5 +1,5 @@
 build-agent:
-	cd agni-agent && go build -o ../bin/agni-agent main.go
+	cd agni-agent && go build -o ../bin/agni-agent.exe main.go
 
 
 .PHONY: build

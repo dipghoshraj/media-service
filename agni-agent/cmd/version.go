@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/spf13/cobra"
 )
@@ -14,7 +14,7 @@ var versionCmd = &cobra.Command{
 		// Print the version of the application
 		// This should be set during the build process
 		version := "0.1.0" // Replace with actual version variable if set during build
-		fmt.Println("agent-tunnel version:", version)
+		log.Println("agent-tunnel version:", version)
 	},
 }
 
