@@ -1,4 +1,4 @@
-package registry
+package bridge
 
 import (
 	"github.com/Purple-House/mem-sdk/certengine/pkg"

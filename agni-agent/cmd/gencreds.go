@@ -3,7 +3,7 @@ package cmd
 import (
 	"log"
 
-	"github.com/Purple-House/agni-tunnels/agni-agent/pkg/registry"
+	"github.com/Purple-House/agni-tunnels/agni-agent/pkg/bridge"
 	"github.com/spf13/cobra"
 )
 
@@ -19,7 +19,7 @@ var buildCredsCmd = &cobra.Command{
 	Long: `This command generates TLS credentials (certificates and keys) for secure communication in the IndraNet agent tunnel.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		log.Println("🔐 Generating TLS credentials...")
-		err := registry.BuildCreds(dns, name)
+		err := bridge.BuildCreds(dns, name)
 		if err != nil {
 			log.Fatalf("❌ Failed to generate TLS credentials: %v", err)
 		}

@@ -1,1 +1,1 @@
-package registry
+package bridge
