@@ -40,11 +40,11 @@ func AgentFingerprint() (string, error) {
 	return fingerprint, nil
 }
 
-func AgentRegistry(agent_domain string, region string) (mp.Agent, string, error) {
+func AgentRegistry() (mp.Agent, string, error) {
 
 	config := pkg.Config{
-		Address:     "localhost:8080",
-		Fingerprint: "86f7b7b55c1591c0aafbb9470baff92f1021791ca8f6ee9e372d0986a886be00",
+		Address:     YamlConfig.Agent.Registry.Address,
+		Fingerprint: YamlConfig.Agent.Registry.Fingureprint,
 		Timeout:     5 * time.Second,
 	}
 
@@ -53,9 +53,9 @@ func AgentRegistry(agent_domain string, region string) (mp.Agent, string, error)
 		return mp.Agent{}, "", err
 	}
 
-	log.Printf("finding the gateways in %s region", region)
+	log.Printf("finding the gateways in %s region", YamlConfig.Agent.Region)
 
-	gateways, err := client.GetGatewayInfo(context.Background(), region)
+	gateways, err := client.GetGatewayInfo(context.Background(), YamlConfig.Agent.Region)
 	if err != nil {
 		return mp.Agent{}, "", err
 	}
@@ -73,7 +73,7 @@ func AgentRegistry(agent_domain string, region string) (mp.Agent, string, error)
 	}
 	log.Printf("Using Agent Fingerprint: %s\n", fingerprint)
 
-	agent, err := client.ConnectAgent(context.Background(), agent_domain, gw.ID, fingerprint, region)
+	agent, err := client.ConnectAgent(context.Background(), YamlConfig.Agent.Domain, gw.ID, fingerprint, YamlConfig.Agent.Region)
 	if err != nil {
 		return mp.Agent{}, "", err
 	}

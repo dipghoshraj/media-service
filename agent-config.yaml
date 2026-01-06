@@ -1,0 +1,11 @@
+version: v1
+
+
+Agent:
+  name: "agent-agni"
+  domain: "agni.local"
+  forward: 9000
+  region: "global"
+  registry:
+    address: "localhost:8080"
+    fingureprint: "registry_fingureprint"
