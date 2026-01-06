@@ -18,6 +18,7 @@ type Agent struct {
 	Forward  int      `yaml:"forward"`
 	Registry Registry `yaml:"registry"`
 	Region   string   `yaml:"region"`
+	Certs    string   `yaml:"certs"`
 }
 
 type Config struct {

@@ -17,7 +17,7 @@ import (
 )
 
 func AgentFingerprint() (string, error) {
-	permfile := "client.pem"
+	permfile := fmt.Sprintf("%s/client.pem", YamlConfig.Agent.Certs)
 	certPEM, err := os.ReadFile(permfile)
 	if err != nil {
 		return "", err
