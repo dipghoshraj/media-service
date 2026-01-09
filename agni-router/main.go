@@ -24,7 +24,7 @@ import (
 )
 
 func certFingurePrint() error {
-	permfile := "certs/server.pem" // replace with your file path
+	permfile := fmt.Sprintf("%s/server.pem", config.YamlConfig.Router.Certs)
 	certPEM, err := os.ReadFile(permfile)
 	if err != nil {
 		return fmt.Errorf("failed to read certificate file: %v", err)
@@ -62,7 +62,10 @@ func gracefulShutdown(server *grpc.Server) {
 
 func main() {
 
-	cert, err := tls.LoadX509KeyPair("certs/server.pem", "certs/server-key.pem")
+	permfile := fmt.Sprintf("%s/server.pem", config.YamlConfig.Router.Certs)
+	permfileKey := fmt.Sprintf("%s/server-key.pem", config.YamlConfig.Router.Certs)
+
+	cert, err := tls.LoadX509KeyPair(permfile, permfileKey)
 	if err != nil {
 		log.Fatalf("failed to load server certificate: %v", err)
 	}
