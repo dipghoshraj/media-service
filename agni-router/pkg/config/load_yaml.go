@@ -19,6 +19,7 @@ type Router struct {
 	Certs      string   `yaml:"certs"`
 	RouterIP   string   `yaml:"router_ip"`
 	RouterPort string   `yaml:"port"`
+	Dns        string   `yaml:"dns"`
 }
 
 type Config struct {

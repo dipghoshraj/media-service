@@ -16,8 +16,9 @@ Router:
   name: "agni-Router"
   router_ip: "127.0.0.1"
   port: "8000"
-  certs: ""
+  certs: "agni-router/certmanger"
   region: "global"
+  dns: "localhost"
   registry:
     address: "localhost:8080"
     fingureprint: "86f7b7b55c1591c0aafbb9470baff92f1021791ca8f6ee9e372d0986a886be00"
