@@ -51,5 +51,4 @@ func checkConnect(req *tunnel.ConnectRequest) bool {
 	log.Println("check the none", req.Nonce)
 
 	return true
-
 }
