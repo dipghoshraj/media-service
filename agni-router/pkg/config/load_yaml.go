@@ -18,7 +18,7 @@ type Router struct {
 	Region     string   `yaml:"region"`
 	Certs      string   `yaml:"certs"`
 	RouterIP   string   `yaml:"router_ip"`
-	RouterPort int      `yaml:"port"`
+	RouterPort string   `yaml:"port"`
 }
 
 type Config struct {

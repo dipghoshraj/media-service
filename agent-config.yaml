@@ -15,7 +15,7 @@ Agent:
 Router:
   name: "agni-Router"
   router_ip: "127.0.0.1"
-  port: 8000
+  port: "8000"
   certs: ""
   region: "global"
   registry:

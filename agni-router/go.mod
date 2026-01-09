@@ -2,7 +2,10 @@ module github.com/Purple-House/agni-tunnels/agni-router
 
 go 1.25.5
 
-require gopkg.in/yaml.v3 v3.0.1
+require (
+	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
+	gopkg.in/yaml.v3 v3.0.1
+)
 
 require (
 	github.com/Purple-House/agni-schema v0.0.1
