@@ -4,7 +4,7 @@
 // 	protoc        (unknown)
 // source: protobuf/tunnel.v2.proto
 
-package v2
+package tunnel
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -362,7 +362,7 @@ func (x *TunnelClose) GetReason() string {
 
 type ControlMessage struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Type          ControlMessage_Type    `protobuf:"varint,1,opt,name=type,proto3,enum=tunnel.v2.ControlMessage_Type" json:"type,omitempty"`
+	Type          ControlMessage_Type    `protobuf:"varint,1,opt,name=type,proto3,enum=tunnel.ControlMessage_Type" json:"type,omitempty"`
 	Payload       string                 `protobuf:"bytes,2,opt,name=payload,proto3" json:"payload,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -562,7 +562,7 @@ var File_protobuf_tunnel_v2_proto protoreflect.FileDescriptor
 
 const file_protobuf_tunnel_v2_proto_rawDesc = "" +
 	"\n" +
-	"\x18protobuf/tunnel.v2.proto\x12\ttunnel.v2\"\x93\x01\n" +
+	"\x18protobuf/tunnel.v2.proto\x12\x06tunnel\"\x93\x01\n" +
 	"\x0eConnectRequest\x12\x19\n" +
 	"\bagent_id\x18\x01 \x01(\tR\aagentId\x12\x14\n" +
 	"\x05token\x18\x02 \x01(\tR\x05token\x12\x1c\n" +
@@ -583,27 +583,27 @@ const file_protobuf_tunnel_v2_proto_rawDesc = "" +
 	"\apayload\x18\x02 \x01(\fR\apayload\"J\n" +
 	"\vTunnelClose\x12#\n" +
 	"\rconnection_id\x18\x01 \x01(\tR\fconnectionId\x12\x16\n" +
-	"\x06reason\x18\x02 \x01(\tR\x06reason\"\xa4\x01\n" +
-	"\x0eControlMessage\x122\n" +
-	"\x04type\x18\x01 \x01(\x0e2\x1e.tunnel.v2.ControlMessage.TypeR\x04type\x12\x18\n" +
+	"\x06reason\x18\x02 \x01(\tR\x06reason\"\xa1\x01\n" +
+	"\x0eControlMessage\x12/\n" +
+	"\x04type\x18\x01 \x01(\x0e2\x1b.tunnel.ControlMessage.TypeR\x04type\x12\x18\n" +
 	"\apayload\x18\x02 \x01(\tR\apayload\"D\n" +
 	"\x04Type\x12\v\n" +
 	"\aUNKNOWN\x10\x00\x12\b\n" +
 	"\x04PING\x10\x01\x12\b\n" +
 	"\x04PONG\x10\x02\x12\t\n" +
 	"\x05ERROR\x10\x03\x12\x10\n" +
-	"\fBACKPRESSURE\x10\x04\"\xc7\x02\n" +
-	"\bEnvelope\x125\n" +
-	"\aconnect\x18\x01 \x01(\v2\x19.tunnel.v2.ConnectRequestH\x00R\aconnect\x128\n" +
-	"\vconnect_ack\x18\x02 \x01(\v2\x15.tunnel.v2.ConnectAckH\x00R\n" +
-	"connectAck\x12+\n" +
-	"\x04open\x18\x03 \x01(\v2\x15.tunnel.v2.TunnelOpenH\x00R\x04open\x12+\n" +
-	"\x04data\x18\x04 \x01(\v2\x15.tunnel.v2.TunnelDataH\x00R\x04data\x12.\n" +
-	"\x05close\x18\x05 \x01(\v2\x16.tunnel.v2.TunnelCloseH\x00R\x05close\x125\n" +
-	"\acontrol\x18\x06 \x01(\v2\x19.tunnel.v2.ControlMessageH\x00R\acontrolB\t\n" +
-	"\amessage2H\n" +
-	"\rGatewayTunnel\x127\n" +
-	"\aConnect\x12\x13.tunnel.v2.Envelope\x1a\x13.tunnel.v2.Envelope(\x010\x01B\x17Z\x15agni-tunnels/proto/v2b\x06proto3"
+	"\fBACKPRESSURE\x10\x04\"\xb5\x02\n" +
+	"\bEnvelope\x122\n" +
+	"\aconnect\x18\x01 \x01(\v2\x16.tunnel.ConnectRequestH\x00R\aconnect\x125\n" +
+	"\vconnect_ack\x18\x02 \x01(\v2\x12.tunnel.ConnectAckH\x00R\n" +
+	"connectAck\x12(\n" +
+	"\x04open\x18\x03 \x01(\v2\x12.tunnel.TunnelOpenH\x00R\x04open\x12(\n" +
+	"\x04data\x18\x04 \x01(\v2\x12.tunnel.TunnelDataH\x00R\x04data\x12+\n" +
+	"\x05close\x18\x05 \x01(\v2\x13.tunnel.TunnelCloseH\x00R\x05close\x122\n" +
+	"\acontrol\x18\x06 \x01(\v2\x16.tunnel.ControlMessageH\x00R\acontrolB\t\n" +
+	"\amessage2B\n" +
+	"\rGatewayTunnel\x121\n" +
+	"\aConnect\x12\x10.tunnel.Envelope\x1a\x10.tunnel.Envelope(\x010\x01B8Z6Purple-House/agni-tunnels/tunnel-proto/protobuf;tunnelb\x06proto3"
 
 var (
 	file_protobuf_tunnel_v2_proto_rawDescOnce sync.Once
@@ -620,25 +620,25 @@ func file_protobuf_tunnel_v2_proto_rawDescGZIP() []byte {
 var file_protobuf_tunnel_v2_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_protobuf_tunnel_v2_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_protobuf_tunnel_v2_proto_goTypes = []any{
-	(ControlMessage_Type)(0), // 0: tunnel.v2.ControlMessage.Type
-	(*ConnectRequest)(nil),   // 1: tunnel.v2.ConnectRequest
-	(*ConnectAck)(nil),       // 2: tunnel.v2.ConnectAck
-	(*TunnelOpen)(nil),       // 3: tunnel.v2.TunnelOpen
-	(*TunnelData)(nil),       // 4: tunnel.v2.TunnelData
-	(*TunnelClose)(nil),      // 5: tunnel.v2.TunnelClose
-	(*ControlMessage)(nil),   // 6: tunnel.v2.ControlMessage
-	(*Envelope)(nil),         // 7: tunnel.v2.Envelope
+	(ControlMessage_Type)(0), // 0: tunnel.ControlMessage.Type
+	(*ConnectRequest)(nil),   // 1: tunnel.ConnectRequest
+	(*ConnectAck)(nil),       // 2: tunnel.ConnectAck
+	(*TunnelOpen)(nil),       // 3: tunnel.TunnelOpen
+	(*TunnelData)(nil),       // 4: tunnel.TunnelData
+	(*TunnelClose)(nil),      // 5: tunnel.TunnelClose
+	(*ControlMessage)(nil),   // 6: tunnel.ControlMessage
+	(*Envelope)(nil),         // 7: tunnel.Envelope
 }
 var file_protobuf_tunnel_v2_proto_depIdxs = []int32{
-	0, // 0: tunnel.v2.ControlMessage.type:type_name -> tunnel.v2.ControlMessage.Type
-	1, // 1: tunnel.v2.Envelope.connect:type_name -> tunnel.v2.ConnectRequest
-	2, // 2: tunnel.v2.Envelope.connect_ack:type_name -> tunnel.v2.ConnectAck
-	3, // 3: tunnel.v2.Envelope.open:type_name -> tunnel.v2.TunnelOpen
-	4, // 4: tunnel.v2.Envelope.data:type_name -> tunnel.v2.TunnelData
-	5, // 5: tunnel.v2.Envelope.close:type_name -> tunnel.v2.TunnelClose
-	6, // 6: tunnel.v2.Envelope.control:type_name -> tunnel.v2.ControlMessage
-	7, // 7: tunnel.v2.GatewayTunnel.Connect:input_type -> tunnel.v2.Envelope
-	7, // 8: tunnel.v2.GatewayTunnel.Connect:output_type -> tunnel.v2.Envelope
+	0, // 0: tunnel.ControlMessage.type:type_name -> tunnel.ControlMessage.Type
+	1, // 1: tunnel.Envelope.connect:type_name -> tunnel.ConnectRequest
+	2, // 2: tunnel.Envelope.connect_ack:type_name -> tunnel.ConnectAck
+	3, // 3: tunnel.Envelope.open:type_name -> tunnel.TunnelOpen
+	4, // 4: tunnel.Envelope.data:type_name -> tunnel.TunnelData
+	5, // 5: tunnel.Envelope.close:type_name -> tunnel.TunnelClose
+	6, // 6: tunnel.Envelope.control:type_name -> tunnel.ControlMessage
+	7, // 7: tunnel.GatewayTunnel.Connect:input_type -> tunnel.Envelope
+	7, // 8: tunnel.GatewayTunnel.Connect:output_type -> tunnel.Envelope
 	8, // [8:9] is the sub-list for method output_type
 	7, // [7:8] is the sub-list for method input_type
 	7, // [7:7] is the sub-list for extension type_name

@@ -4,7 +4,7 @@
 // - protoc             (unknown)
 // source: protobuf/tunnel.v2.proto
 
-package v2
+package tunnel
 
 import (
 	context "context"
@@ -19,7 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	GatewayTunnel_Connect_FullMethodName = "/tunnel.v2.GatewayTunnel/Connect"
+	GatewayTunnel_Connect_FullMethodName = "/tunnel.GatewayTunnel/Connect"
 )
 
 // GatewayTunnelClient is the client API for GatewayTunnel service.
@@ -100,7 +100,7 @@ type GatewayTunnel_ConnectServer = grpc.BidiStreamingServer[Envelope, Envelope]
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var GatewayTunnel_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "tunnel.v2.GatewayTunnel",
+	ServiceName: "tunnel.GatewayTunnel",
 	HandlerType: (*GatewayTunnelServer)(nil),
 	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{
