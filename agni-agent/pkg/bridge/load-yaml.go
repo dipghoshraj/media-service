@@ -31,6 +31,8 @@ var YamlConfig *Config
 func init() {
 
 	data, err := os.ReadFile("agent-config.yaml")
+	log.Println("load the config")
+
 	if err != nil {
 		log.Fatalf("error reading YAML file: %v", err)
 	}
