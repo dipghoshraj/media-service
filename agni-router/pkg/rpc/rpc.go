@@ -8,12 +8,9 @@ import (
 )
 
 type TunnelRpc struct {
-	rpc      *tunnel.UnimplementedAgniTunnelServer
-	registry *mp.Client
+	tunnel.UnimplementedAgniTunnelServer
 }
 
 func NewTunnelRpc(registry *mp.Client) *TunnelRpc {
-	return &TunnelRpc{
-		registry: registry,
-	}
+	return &TunnelRpc{}
 }

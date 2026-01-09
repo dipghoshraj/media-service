@@ -14,11 +14,13 @@ import (
 	"runtime/debug"
 	"syscall"
 
+	tunnel "github.com/Purple-House/agni-schema/protobuf"
 	"github.com/Purple-House/agni-tunnels/agni-router/pkg/config"
+	"github.com/Purple-House/agni-tunnels/agni-router/pkg/rpc"
 	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
-	"google.golang.org/grpc/reflection"
 )
 
 func certFingurePrint() error {
@@ -113,10 +115,10 @@ func main() {
 		grpc.StreamInterceptor(grpc_recovery.StreamServerInterceptor(recoveryOpts...)),
 	)
 
-	reflection.Register(s)
+	tunnel.RegisterAgniTunnelServer(s, &rpc.TunnelRpc{})
 
 	// Start the server
-	fmt.Println("Server is running on port 50051")
+	fmt.Println("Server is running on port ", port)
 	go func() {
 		if err := s.Serve(lis); err != nil {
 			log.Fatalf("failed to serve: %v", err)
