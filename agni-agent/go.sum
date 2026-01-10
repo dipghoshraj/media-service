@@ -1,3 +1,5 @@
+github.com/Purple-House/agni-schema v0.0.1 h1:kAHluUMNl092TpFSTFyd+rC1+j8wvh44nZmG6cm/JAs=
+github.com/Purple-House/agni-schema v0.0.1/go.mod h1:DPYUfHJOcgU2hze77hW7eu/JT/SMdaswYUPWCs/Ql+8=
 github.com/Purple-House/mem-sdk/certengine v0.0.0-20260105184353-8f197458eb7f h1:DKJGFKTG/EUgNUdsYOCLZx0ouUgEYkwZh7djdBzOK8g=
 github.com/Purple-House/mem-sdk/certengine v0.0.0-20260105184353-8f197458eb7f/go.mod h1:ur8Hyt7cG4lCWcVXEpCL4W8Yi63c6UzbWrX2urYdOAU=
 github.com/Purple-House/mem-sdk/memsdk v0.0.0-20260105184353-8f197458eb7f h1:qlaV27MIPrTjvUUlhPZBjdmCSPu6k8844vvATEbBCkA=

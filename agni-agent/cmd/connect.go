@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/Purple-House/agni-tunnels/agni-agent/pkg/bridge"
+	"github.com/Purple-House/agni-tunnels/agni-agent/pkg/rpc"
 	"github.com/spf13/cobra"
 )
 
@@ -24,6 +25,9 @@ var connectCmd = &cobra.Command{
 		gatewayConntion := fmt.Sprintf("%s:%d", agent.GatewayIP, agent.WssPort)
 
 		log.Println("Connecting to gatewayURL", gatewayConntion)
+		_ = rpc.InitateConnection(gatewayConntion)
+
+		rpc.SendConnection(agent, fingerprint)
 	},
 }
 
