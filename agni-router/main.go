@@ -1,11 +1,7 @@
 package main
 
 import (
-	"crypto/sha256"
 	"crypto/tls"
-	"crypto/x509"
-	"encoding/hex"
-	"encoding/pem"
 	"fmt"
 	"log"
 	"net"
@@ -22,30 +18,6 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 )
-
-func certFingurePrint() error {
-	permfile := fmt.Sprintf("%s/server.pem", config.YamlConfig.Router.Certs)
-	certPEM, err := os.ReadFile(permfile)
-	if err != nil {
-		return fmt.Errorf("failed to read certificate file: %v", err)
-	}
-
-	block, _ := pem.Decode(certPEM)
-
-	if block == nil || block.Type != "CERTIFICATE" {
-		return fmt.Errorf("failed to decode PEM block containing certificate")
-	}
-
-	cert, err := x509.ParseCertificate(block.Bytes)
-	if err != nil {
-		return err
-	}
-
-	sum := sha256.Sum256(cert.Raw)
-	fingerprint := hex.EncodeToString(sum[:])
-	log.Printf("Client CERT fingerprint (SHA256): %s", fingerprint)
-	return nil
-}
 
 func gracefulShutdown(server *grpc.Server) {
 
@@ -90,7 +62,7 @@ func main() {
 		Renegotiation: tls.RenegotiateNever,
 	}
 
-	err = certFingurePrint()
+	_, err = config.CertFingurePrint()
 	if err != nil {
 		log.Fatalf("Failed to print certificate fingerprint: %v", err)
 	}
@@ -118,7 +90,10 @@ func main() {
 		grpc.StreamInterceptor(grpc_recovery.StreamServerInterceptor(recoveryOpts...)),
 	)
 
-	tunnel.RegisterAgniTunnelServer(s, &rpc.TunnelRpc{})
+	seeder, err := config.SeederClient()
+	rpcClient := rpc.NewTunnelRpc(seeder)
+
+	tunnel.RegisterAgniTunnelServer(s, rpcClient)
 
 	// Start the server
 	log.Println("Server is running on port ", port)

@@ -9,8 +9,11 @@ import (
 
 type TunnelRpc struct {
 	tunnel.UnimplementedAgniTunnelServer
+	seeder *mp.Client
 }
 
-func NewTunnelRpc(registry *mp.Client) *TunnelRpc {
-	return &TunnelRpc{}
+func NewTunnelRpc(seeder *mp.Client) *TunnelRpc {
+	return &TunnelRpc{
+		seeder: seeder,
+	}
 }
