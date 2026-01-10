@@ -71,7 +71,15 @@ func SeedGatway(fingureprint string) error {
 	port, _ := strconv.ParseInt(YamlConfig.Router.RouterPort, 10, 32)
 	proxy_port, _ := strconv.ParseInt(YamlConfig.Router.ProxtPort, 10, 32)
 
-	gateways, err := client.Addgateway(ctx, region, YamlConfig.Router.RouterIP, int32(port), fingureprint, int32(proxy_port))
+	router := mp.AddRouterRequest{
+		Region:     region,
+		RouterIp:   YamlConfig.Router.RouterIP,
+		RouterPort: int32(proxy_port),
+		Identity:   fingureprint,
+		RpcPort:    int32(port),
+	}
+
+	gateways, err := client.Addgateway(ctx, router)
 	if err != nil {
 		panic(err)
 	}

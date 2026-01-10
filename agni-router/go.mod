@@ -10,7 +10,7 @@ require (
 
 require (
 	github.com/Purple-House/agni-schema v0.0.1
-	github.com/Purple-House/mem-sdk/memsdk v0.0.0-20260105184353-8f197458eb7f
+	github.com/Purple-House/mem-sdk/memsdk v0.0.0-20260110192044-780c578988cc
 	golang.org/x/net v0.47.0 // indirect
 	golang.org/x/sys v0.38.0 // indirect
 	golang.org/x/text v0.31.0 // indirect
