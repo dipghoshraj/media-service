@@ -90,10 +90,7 @@ func main() {
 		grpc.StreamInterceptor(grpc_recovery.StreamServerInterceptor(recoveryOpts...)),
 	)
 
-	seeder, err := config.SeederClient()
-	rpcClient := rpc.NewTunnelRpc(seeder)
-
-	tunnel.RegisterAgniTunnelServer(s, rpcClient)
+	tunnel.RegisterAgniTunnelServer(s, &rpc.TunnelRpc{})
 
 	// Start the server
 	log.Println("Server is running on port ", port)
