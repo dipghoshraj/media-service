@@ -121,7 +121,7 @@ func main() {
 	tunnel.RegisterAgniTunnelServer(s, &rpc.TunnelRpc{})
 
 	// Start the server
-	fmt.Println("Server is running on port ", port)
+	log.Println("Server is running on port ", port)
 	go func() {
 		if err := s.Serve(lis); err != nil {
 			log.Fatalf("failed to serve: %v", err)
