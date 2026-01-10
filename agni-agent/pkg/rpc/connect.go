@@ -80,6 +80,7 @@ func SendConnection(agent maps.Agent) {
 	}()
 
 	<-quit
+	log.Println("Shutting down connection...")
 	session.Cancel()
 	session.Conn.Close()
 	<-done
