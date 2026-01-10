@@ -10,7 +10,7 @@ require (
 )
 
 require (
-	github.com/Purple-House/mem-sdk/memsdk v0.0.0-20260105184353-8f197458eb7f
+	github.com/Purple-House/mem-sdk/memsdk v0.0.0-20260110201653-6806932eadf7
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.9 // indirect
 	golang.org/x/net v0.47.0 // indirect

@@ -10,6 +10,8 @@ github.com/Purple-House/mem-sdk/memsdk v0.0.0-20260110191232-34ed108db7f4 h1:k5E
 github.com/Purple-House/mem-sdk/memsdk v0.0.0-20260110191232-34ed108db7f4/go.mod h1:W6i/7CQiZ6XKUHKOSTUFYZ04V/TTvTo2KgPJRr0ikT0=
 github.com/Purple-House/mem-sdk/memsdk v0.0.0-20260110192044-780c578988cc h1:inZtu/rjsweix5opj6mbPIz/fTLyZfJW4nYflQeEh3o=
 github.com/Purple-House/mem-sdk/memsdk v0.0.0-20260110192044-780c578988cc/go.mod h1:W6i/7CQiZ6XKUHKOSTUFYZ04V/TTvTo2KgPJRr0ikT0=
+github.com/Purple-House/mem-sdk/memsdk v0.0.0-20260110201653-6806932eadf7 h1:+EHM6RE77HdvjQMPMqM4RdVeSC8qF8QP0nfPRyW+1po=
+github.com/Purple-House/mem-sdk/memsdk v0.0.0-20260110201653-6806932eadf7/go.mod h1:W6i/7CQiZ6XKUHKOSTUFYZ04V/TTvTo2KgPJRr0ikT0=
 github.com/benbjohnson/clock v1.1.0/go.mod h1:J11/hYXuz8f4ySSvYwY0FKfm+ezbsZBKZxNJlLklBHA=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
