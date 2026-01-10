@@ -1,6 +1,7 @@
 package config
 
 import (
+	"context"
 	"crypto/sha256"
 	"crypto/x509"
 	"encoding/hex"
@@ -8,6 +9,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"time"
 
 	mp "github.com/Purple-House/mem-sdk/memsdk/maps"
@@ -51,4 +53,28 @@ func SeederClient() (*mp.Client, error) {
 		return nil, fmt.Errorf("Seeder connection error %v", err)
 	}
 	return client, nil
+}
+
+func SeedGatway(fingureprint string) error {
+	client, err := SeederClient()
+	if err != nil {
+		return err
+	}
+
+	defer client.Close()
+
+	region := "global"
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	port, _ := strconv.ParseInt(YamlConfig.Router.RouterPort, 10, 32)
+	proxy_port, _ := strconv.ParseInt(YamlConfig.Router.ProxtPort, 10, 32)
+
+	gateways, err := client.Addgateway(ctx, region, YamlConfig.Router.RouterIP, int32(port), fingureprint, int32(proxy_port))
+	if err != nil {
+		panic(err)
+	}
+	log.Println("Added Gateway:", gateways.ID, gateways.GatewayPort, gateways.WssPort, gateways.IP)
+	return nil
 }

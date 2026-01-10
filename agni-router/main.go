@@ -62,7 +62,7 @@ func main() {
 		Renegotiation: tls.RenegotiateNever,
 	}
 
-	_, err = config.CertFingurePrint()
+	fingurePrint, err := config.CertFingurePrint()
 	if err != nil {
 		log.Fatalf("Failed to print certificate fingerprint: %v", err)
 	}
@@ -89,6 +89,8 @@ func main() {
 		grpc.UnaryInterceptor(grpc_recovery.UnaryServerInterceptor(recoveryOpts...)),
 		grpc.StreamInterceptor(grpc_recovery.StreamServerInterceptor(recoveryOpts...)),
 	)
+
+	err = config.SeedGatway(fingurePrint)
 
 	tunnel.RegisterAgniTunnelServer(s, &rpc.TunnelRpc{})
 
