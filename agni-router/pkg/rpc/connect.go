@@ -46,9 +46,9 @@ func (server *TunnelRpc) Connect(stream tunnel.AgniTunnel_ConnectServer) error {
 
 func checkConnect(req *tunnel.ConnectRequest) bool {
 	log.Println("check the agent", req.AgentId)
-	log.Println("check the token", req.Token)
-	log.Println("check the signature", req.Signature)
-	log.Println("check the none", req.Nonce)
+	// log.Println("check the token", req.Token)
+	// log.Println("check the signature", req.Signature)
+	// log.Println("check the none", req.Nonce)
 
 	return true
 }

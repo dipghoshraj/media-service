@@ -6,8 +6,10 @@ import (
 	"crypto/x509"
 	"encoding/hex"
 	"errors"
+	"fmt"
 	"log"
 
+	"github.com/Purple-House/agni-tunnels/agni-agent/pkg/bridge"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 )
@@ -16,7 +18,12 @@ var rpcconn *grpc.ClientConn
 
 func routerConnect(router string, gatewayIdentity string) *grpc.ClientConn {
 
+	permfile := fmt.Sprintf("%s/client.pem", bridge.YamlConfig.Agent.Certs)
+	permKeyfile := fmt.Sprintf("%s/client-key.pem", bridge.YamlConfig.Agent.Certs)
+	clientCert, _ := tls.LoadX509KeyPair(permfile, permKeyfile)
+
 	tlsConfig := &tls.Config{
+		Certificates:       []tls.Certificate{clientCert},
 		InsecureSkipVerify: true,
 		VerifyPeerCertificate: func(rawCerts [][]byte, verifiedChains [][]*x509.Certificate) error {
 			cert, err := x509.ParseCertificate(rawCerts[0])

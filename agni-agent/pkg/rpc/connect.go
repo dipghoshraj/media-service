@@ -63,13 +63,13 @@ func SendConnection(agent maps.Agent) {
 
 	session, err := NewTunnelSession(agent)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 
 	go ReadLoop(session.Stream)
 	session.Cancel()
 	session.Conn.Close()
-	// select {} // 🚨 blocks forever
+	select {} // 🚨 blocks forever
 }
 
 func ReadLoop(stream tunnel.AgniTunnel_ConnectClient) {
