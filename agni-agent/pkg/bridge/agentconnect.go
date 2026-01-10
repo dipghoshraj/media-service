@@ -79,5 +79,5 @@ func AgentRegistry() (mp.Agent, string, error) {
 	}
 
 	log.Printf("Connected Agent: %s (%s)\n", agent.ID, agent.Domain)
-	return agent, fingerprint, nil
+	return agent, gw.Identity, nil
 }

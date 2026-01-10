@@ -10,51 +10,75 @@ import (
 	"google.golang.org/grpc"
 )
 
-func InitateConnection(router string) *grpc.ClientConn {
-	conn := routerConnect(router)
+type TunnelSession struct {
+	Conn   *grpc.ClientConn
+	Stream tunnel.AgniTunnel_ConnectClient
+	Ctx    context.Context
+	Cancel context.CancelFunc
+}
+
+func InitateConnection(router string, gatewayIdentity string) *grpc.ClientConn {
+	conn := routerConnect(router, gatewayIdentity)
 	return conn
 }
 
-func SendConnection(agent maps.Agent, fingerprint string) {
-
+func NewTunnelSession(agent maps.Agent) (*TunnelSession, error) {
 	conn := GetRouter()
 
-	defer conn.Close()
-
 	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
 	client := tunnel.NewAgniTunnelClient(conn)
 
 	stream, err := client.Connect(ctx)
 	if err != nil {
-		log.Fatal(err)
+		cancel()
+		conn.Close()
+		return nil, err
 	}
 
 	err = stream.Send(&tunnel.Envelope{
 		Message: &tunnel.Envelope_Connect{
 			Connect: &tunnel.ConnectRequest{
 				AgentId:   agent.ID,
-				Token:     fingerprint,
+				Token:     agent.Identity,
 				Timestamp: time.Now().Unix(),
-				Nonce:     "",
-				Signature: fingerprint,
+				Signature: agent.Identity,
 			},
 		},
 	})
 	if err != nil {
-		log.Fatal("send connect:", err)
+		cancel()
+		conn.Close()
+		return nil, err
 	}
 
-	go func() {
-		for {
-			in, err := stream.Recv()
-			if err != nil {
-				log.Println("stream closed:", err)
-				return
-			}
+	return &TunnelSession{
+		Conn:   conn,
+		Stream: stream,
+		Ctx:    ctx,
+		Cancel: cancel,
+	}, nil
+}
 
-			log.Println("received the message: ", in.Message)
+func SendConnection(agent maps.Agent) {
 
+	session, err := NewTunnelSession(agent)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	go ReadLoop(session.Stream)
+	session.Cancel()
+	session.Conn.Close()
+	// select {} // 🚨 blocks forever
+}
+
+func ReadLoop(stream tunnel.AgniTunnel_ConnectClient) {
+	for {
+		in, err := stream.Recv()
+		if err != nil {
+			log.Println("stream closed:", err)
+			return
 		}
-	}()
+		log.Println("received the message: ", in.Message)
+	}
 }

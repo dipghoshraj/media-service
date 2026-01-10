@@ -13,7 +13,7 @@ var versionCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		// Print the version of the application
 		// This should be set during the build process
-		version := "0.1.0" // Replace with actual version variable if set during build
+		version := "0.1.2" // Replace with actual version variable if set during build
 		log.Println("agent-tunnel version:", version)
 	},
 }

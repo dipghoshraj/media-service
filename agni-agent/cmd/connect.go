@@ -16,18 +16,18 @@ var connectCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		log.Println("📝 Registering agent with the registry...")
-		agent, fingerprint, err := bridge.AgentRegistry()
+		agent, gatewayIdentity, err := bridge.AgentRegistry()
 		if err != nil {
 			log.Fatalf("❌ Failed to register agent: %v", err)
 		}
-		log.Printf("✅ Agent registered successfully: ID=%s, Domain=%s fingurePrint=%s", agent.ID, agent.Domain, fingerprint)
+		log.Printf("✅ Agent registered successfully: ID=%s, Domain=%s fingurePrint=%s", agent.ID, agent.Domain, agent.Identity)
 		log.Println("🔌 Connecting to the agent tunnel...")
 		gatewayConntion := fmt.Sprintf("%s:%d", agent.GatewayIP, agent.WssPort)
 
 		log.Println("Connecting to gatewayURL", gatewayConntion)
-		_ = rpc.InitateConnection(gatewayConntion)
+		_ = rpc.InitateConnection(gatewayConntion, gatewayIdentity)
 
-		rpc.SendConnection(agent, fingerprint)
+		rpc.SendConnection(agent)
 	},
 }
 
