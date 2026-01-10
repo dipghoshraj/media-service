@@ -3,6 +3,8 @@ package rpc
 import (
 	"context"
 	"log"
+	"os"
+	"os/signal"
 	"time"
 
 	tunnel "github.com/Purple-House/agni-schema/protobuf"
@@ -63,13 +65,24 @@ func SendConnection(agent maps.Agent) {
 
 	session, err := NewTunnelSession(agent)
 	if err != nil {
+		session.Cancel()
+		session.Conn.Close()
 		panic(err)
 	}
 
-	go ReadLoop(session.Stream)
+	done := make(chan struct{})
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt)
+
+	go func() {
+		ReadLoop(session.Stream)
+		close(done)
+	}()
+
+	<-quit
 	session.Cancel()
 	session.Conn.Close()
-	select {} // 🚨 blocks forever
+	<-done
 }
 
 func ReadLoop(stream tunnel.AgniTunnel_ConnectClient) {
