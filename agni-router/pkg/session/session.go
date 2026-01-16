@@ -15,16 +15,16 @@ type AgentSession struct {
 	LastSeen time.Time
 }
 
-type AgentRegistry struct {
+type AgentSeeder struct {
 	sync.RWMutex
 	sessions map[string]*AgentSession
 }
 
-var Registry = &AgentRegistry{
+var Seeder = &AgentSeeder{
 	sessions: make(map[string]*AgentSession),
 }
 
-func (r *AgentRegistry) Register(appID string, session *AgentSession) {
+func (r *AgentSeeder) Register(appID string, session *AgentSession) {
 	r.Lock()
 	defer r.Unlock()
 	r.sessions[appID] = session
@@ -32,7 +32,7 @@ func (r *AgentRegistry) Register(appID string, session *AgentSession) {
 
 }
 
-func (r *AgentRegistry) Unregister(appID string) {
+func (r *AgentSeeder) Unregister(appID string) {
 	r.Lock()
 	defer r.Unlock()
 	if _, exists := r.sessions[appID]; exists {
@@ -43,7 +43,7 @@ func (r *AgentRegistry) Unregister(appID string) {
 	}
 }
 
-func (r *AgentRegistry) GetSession(appID string) (*AgentSession, bool) {
+func (r *AgentSeeder) GetSession(appID string) (*AgentSession, bool) {
 	r.RLock()
 	defer r.RUnlock()
 	session, exists := r.sessions[appID]

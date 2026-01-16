@@ -22,7 +22,7 @@ func HandleStream(conn net.Conn) {
 		return
 	}
 
-	registry, exists := Registry.GetSession(serverName)
+	registry, exists := Seeder.GetSession(serverName)
 	if !exists {
 		return
 	}
