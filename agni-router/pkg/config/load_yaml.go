@@ -7,20 +7,20 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type Registry struct {
+type Seeder struct {
 	Address      string `yaml:"address"`
 	Fingureprint string `yaml:"fingureprint"`
 }
 
 type Router struct {
-	Name       string   `yaml:"name"`
-	Registry   Registry `yaml:"registry"`
-	Region     string   `yaml:"region"`
-	Certs      string   `yaml:"certs"`
-	RouterIP   string   `yaml:"router_ip"`
-	RouterPort string   `yaml:"rpc_port"`
-	Dns        string   `yaml:"dns"`
-	ProxtPort  string   `yaml:"proxy_port"`
+	Name       string `yaml:"name"`
+	Seeder     Seeder `yaml:"Seeder"`
+	Region     string `yaml:"region"`
+	Certs      string `yaml:"certs"`
+	RouterIP   string `yaml:"router_ip"`
+	RouterPort string `yaml:"rpc_port"`
+	Dns        string `yaml:"dns"`
+	ProxtPort  string `yaml:"proxy_port"`
 }
 
 type Config struct {

@@ -43,8 +43,8 @@ func CertFingurePrint() (string, error) {
 func SeederClient() (*mp.Client, error) {
 
 	config := pkg.Config{
-		Address:     YamlConfig.Router.Registry.Address,
-		Fingerprint: YamlConfig.Router.Registry.Fingureprint,
+		Address:     YamlConfig.Router.Seeder.Address,
+		Fingerprint: YamlConfig.Router.Seeder.Fingureprint,
 		Timeout:     5 * time.Second,
 	}
 

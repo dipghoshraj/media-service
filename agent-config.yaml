@@ -7,7 +7,7 @@ Agent:
   forward: 9000
   region: "global"
   certs: 'agni-agent/certs'
-  registry:
+  Seeder:
     address: "localhost:8080"
     fingureprint: "86f7b7b55c1591c0aafbb9470baff92f1021791ca8f6ee9e372d0986a886be00"
 
@@ -20,6 +20,6 @@ Router:
   certs: "agni-router/certmanger"
   region: "global"
   dns: "localhost"
-  registry:
+  Seeder:
     address: "localhost:8080"
     fingureprint: "86f7b7b55c1591c0aafbb9470baff92f1021791ca8f6ee9e372d0986a886be00"
