@@ -37,4 +37,5 @@ func HandleStream(conn net.Conn) {
 	}
 
 	go PollGRPC(tunnelContext)
+	go WriteData(tunnelContext)
 }
