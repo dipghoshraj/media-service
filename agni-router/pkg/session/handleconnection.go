@@ -5,6 +5,7 @@ import (
 
 	tunnel "github.com/Purple-House/agni-schema/protobuf"
 	"github.com/Purple-House/agni-tunnels/agni-router/pkg/session/sni"
+	"github.com/google/uuid"
 )
 
 type TunnleContext struct {
@@ -19,13 +20,21 @@ func HandleStream(conn net.Conn) {
 
 	serverName, _, err := sni.PeekSNI(conn)
 	if err != nil {
+		conn.Close()
 		return
 	}
 
-	registry, exists := Seeder.GetSession(serverName)
+	session, exists := Seeder.GetSession(serverName)
 	if !exists {
+		conn.Close()
 		return
 	}
+	tunnelContext := &TunnleContext{
+		connection_id: uuid.New().String(),
+		stream:        session.stream,
+		tcp:           conn,
+		closed:        make(chan struct{}),
+	}
 
-	_ = registry.stream
+	go PollGRPC(tunnelContext)
 }
