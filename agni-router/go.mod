@@ -3,9 +3,9 @@ module github.com/Purple-House/agni-tunnels/agni-router
 go 1.25.5
 
 require (
-	github.com/Purple-House/mem-sdk/certengine v0.0.0-20260105184353-8f197458eb7f
 	github.com/google/uuid v1.6.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
+	github.com/odio4u/mem-sdk/certengine v0.0.0-20260114105847-382309589109
 	gopkg.in/yaml.v3 v3.0.1
 )
 
