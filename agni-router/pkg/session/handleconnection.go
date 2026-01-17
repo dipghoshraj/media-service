@@ -5,7 +5,7 @@ import (
 
 	"github.com/google/uuid"
 	tunnel "github.com/odio4u/agni-schema/tunnel"
-	"github.com/odio4u/agni-tunnels/agni-router/pkg/session/sni"
+	"github.com/odio4u/mem-sdk/sni"
 )
 
 type TunnleContext struct {

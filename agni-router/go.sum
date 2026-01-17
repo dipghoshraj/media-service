@@ -47,6 +47,8 @@ github.com/odio4u/mem-sdk/certengine v0.0.0-20260114105847-382309589109 h1:Ooasm
 github.com/odio4u/mem-sdk/certengine v0.0.0-20260114105847-382309589109/go.mod h1:F5lGppwPrIWiUmLh/jcEw9Se3XbC/VF/kpg3oSkmPtw=
 github.com/odio4u/mem-sdk/memsdk v0.0.0-20260114105847-382309589109 h1:vM7mespj1tuJ0O/cbWZMKqVbGFJRGf9PqQbznxFILbQ=
 github.com/odio4u/mem-sdk/memsdk v0.0.0-20260114105847-382309589109/go.mod h1:Qb0NhIEEgeTGlyWFkxD2pKU1rPNTkOcu/h86LwLssFM=
+github.com/odio4u/mem-sdk/sni v0.0.0-20260117212015-6f7054a7f0c7 h1:xyjFibrw3cKUh3PBImPr45BBOKxbQf+iG0FtE1x7vsE=
+github.com/odio4u/mem-sdk/sni v0.0.0-20260117212015-6f7054a7f0c7/go.mod h1:fjmdnBCdqx530roL6Gi1igV+oMcotVFcw7vKCLbwHmA=
 github.com/opentracing/opentracing-go v1.1.0/go.mod h1:UkNAQd3GIcIGf0SeVgPpRdFStlNbqXla1AfSYxPUl2o=
 github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=

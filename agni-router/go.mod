@@ -8,6 +8,7 @@ require (
 	github.com/odio4u/agni-schema v0.0.2
 	github.com/odio4u/mem-sdk/certengine v0.0.0-20260114105847-382309589109
 	github.com/odio4u/mem-sdk/memsdk v0.0.0-20260114105847-382309589109
+	github.com/odio4u/mem-sdk/sni v0.0.0-20260117212015-6f7054a7f0c7
 	gopkg.in/yaml.v3 v3.0.1
 )
 
