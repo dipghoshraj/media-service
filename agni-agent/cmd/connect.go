@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/Purple-House/agni-tunnels/agni-agent/pkg/bridge"
-	"github.com/Purple-House/agni-tunnels/agni-agent/pkg/rpc"
+	"github.com/odio4u/agni-tunnels/agni-agent/pkg/bridge"
+	"github.com/odio4u/agni-tunnels/agni-agent/pkg/rpc"
 	"github.com/spf13/cobra"
 )
 

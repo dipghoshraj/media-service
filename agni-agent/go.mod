@@ -1,16 +1,16 @@
-module github.com/Purple-House/agni-tunnels/agni-agent
+module github.com/odio4u/agni-tunnels/agni-agent
 
 go 1.25.5
 
 require (
-	github.com/Purple-House/agni-schema v0.0.1
-	github.com/Purple-House/mem-sdk/certengine v0.0.0-20260105184353-8f197458eb7f
+	github.com/odio4u/agni-schema v0.0.2
+	github.com/odio4u/mem-sdk/certengine v0.0.0-20260114105847-382309589109
+	github.com/odio4u/mem-sdk/memsdk v0.0.0-20260114105847-382309589109
 	github.com/spf13/cobra v1.10.2
 	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
-	github.com/Purple-House/mem-sdk/memsdk v0.0.0-20260110201653-6806932eadf7
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.9 // indirect
 	golang.org/x/net v0.47.0 // indirect

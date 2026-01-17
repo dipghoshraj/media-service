@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/Purple-House/agni-tunnels/agni-agent/pkg/bridge"
+	"github.com/odio4u/agni-tunnels/agni-agent/pkg/bridge"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 )

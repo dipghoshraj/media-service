@@ -7,8 +7,8 @@ import (
 	"os/signal"
 	"time"
 
-	tunnel "github.com/Purple-House/agni-schema/protobuf"
-	"github.com/Purple-House/mem-sdk/memsdk/maps"
+	tunnel "github.com/odio4u/agni-schema/tunnel"
+	"github.com/odio4u/mem-sdk/memsdk/maps"
 	"google.golang.org/grpc"
 )
 

@@ -11,9 +11,9 @@ import (
 	"os"
 	"time"
 
-	mp "github.com/Purple-House/mem-sdk/memsdk/maps"
+	mp "github.com/odio4u/mem-sdk/memsdk/maps"
 
-	"github.com/Purple-House/mem-sdk/memsdk/pkg"
+	"github.com/odio4u/mem-sdk/memsdk/pkg"
 )
 
 func AgentFingerprint() (string, error) {

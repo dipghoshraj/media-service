@@ -1,7 +1,7 @@
 package bridge
 
 import (
-	"github.com/Purple-House/mem-sdk/certengine/pkg"
+	"github.com/odio4u/mem-sdk/certengine/pkg"
 )
 
 func BuildCreds(dns, name string) error {

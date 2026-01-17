@@ -1,6 +1,6 @@
 package main
 
-import "github.com/Purple-House/agni-tunnels/agni-agent/cmd"
+import "github.com/odio4u/agni-tunnels/agni-agent/cmd"
 
 func main() {
 	cmd.Execute()
