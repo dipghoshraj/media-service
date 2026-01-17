@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/Purple-House/agni-tunnels/agni-router/pkg/config"
+	"github.com/odio4u/agni-tunnels/agni-router/pkg/config"
 	"github.com/odio4u/mem-sdk/certengine/pkg"
 )
 

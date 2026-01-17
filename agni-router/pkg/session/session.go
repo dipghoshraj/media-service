@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	tunnel "github.com/Purple-House/agni-schema/protobuf"
+	tunnel "github.com/odio4u/agni-schema/tunnel"
 )
 
 type AgentSession struct {

@@ -12,8 +12,8 @@ import (
 	"strconv"
 	"time"
 
-	mp "github.com/Purple-House/mem-sdk/memsdk/maps"
-	"github.com/Purple-House/mem-sdk/memsdk/pkg"
+	mp "github.com/odio4u/mem-sdk/memsdk/maps"
+	"github.com/odio4u/mem-sdk/memsdk/pkg"
 )
 
 func CertFingurePrint() (string, error) {

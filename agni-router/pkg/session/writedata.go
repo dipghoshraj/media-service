@@ -3,7 +3,7 @@ package session
 import (
 	"log"
 
-	tunnel "github.com/Purple-House/agni-schema/protobuf"
+	tunnel "github.com/odio4u/agni-schema/tunnel"
 )
 
 func WriteData(tunnelCtx *TunnleContext) {

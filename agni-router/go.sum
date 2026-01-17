@@ -1,9 +1,5 @@
 cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
-github.com/Purple-House/agni-schema v0.0.1 h1:kAHluUMNl092TpFSTFyd+rC1+j8wvh44nZmG6cm/JAs=
-github.com/Purple-House/agni-schema v0.0.1/go.mod h1:DPYUfHJOcgU2hze77hW7eu/JT/SMdaswYUPWCs/Ql+8=
-github.com/Purple-House/mem-sdk/memsdk v0.0.0-20260113190417-b79422cbc094 h1:NsslLOKBbmUZ8N9Nppvcp9x7TMHzpLQNOVcw015pyuU=
-github.com/Purple-House/mem-sdk/memsdk v0.0.0-20260113190417-b79422cbc094/go.mod h1:W6i/7CQiZ6XKUHKOSTUFYZ04V/TTvTo2KgPJRr0ikT0=
 github.com/benbjohnson/clock v1.1.0/go.mod h1:J11/hYXuz8f4ySSvYwY0FKfm+ezbsZBKZxNJlLklBHA=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
@@ -45,8 +41,12 @@ github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORN
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
 github.com/kr/text v0.1.0 h1:45sCR5RtlFHMR4UwH9sdQ5TC8v0qDQCHnXt+kaKSTVE=
 github.com/kr/text v0.1.0/go.mod h1:4Jbv+DJW3UT/LiOwJeYQe1efqtUx/iVham/4vfdArNI=
+github.com/odio4u/agni-schema v0.0.2 h1:C56mTieE0nGb+zjsvTnTN4mD5SJ2MFkEDPw+Rmg+B2M=
+github.com/odio4u/agni-schema v0.0.2/go.mod h1:aCuW2ErI8LqPNuxkNuuSB2mdfjIRP1ayEazUHG4MguE=
 github.com/odio4u/mem-sdk/certengine v0.0.0-20260114105847-382309589109 h1:OoasmLUZezQgsPJJBGwwWU98CTJNcNIlxyZJ2qHYHZw=
 github.com/odio4u/mem-sdk/certengine v0.0.0-20260114105847-382309589109/go.mod h1:F5lGppwPrIWiUmLh/jcEw9Se3XbC/VF/kpg3oSkmPtw=
+github.com/odio4u/mem-sdk/memsdk v0.0.0-20260114105847-382309589109 h1:vM7mespj1tuJ0O/cbWZMKqVbGFJRGf9PqQbznxFILbQ=
+github.com/odio4u/mem-sdk/memsdk v0.0.0-20260114105847-382309589109/go.mod h1:Qb0NhIEEgeTGlyWFkxD2pKU1rPNTkOcu/h86LwLssFM=
 github.com/opentracing/opentracing-go v1.1.0/go.mod h1:UkNAQd3GIcIGf0SeVgPpRdFStlNbqXla1AfSYxPUl2o=
 github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=

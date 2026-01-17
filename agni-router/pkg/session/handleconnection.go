@@ -3,9 +3,9 @@ package session
 import (
 	"net"
 
-	tunnel "github.com/Purple-House/agni-schema/protobuf"
-	"github.com/Purple-House/agni-tunnels/agni-router/pkg/session/sni"
 	"github.com/google/uuid"
+	tunnel "github.com/odio4u/agni-schema/tunnel"
+	"github.com/odio4u/agni-tunnels/agni-router/pkg/session/sni"
 )
 
 type TunnleContext struct {

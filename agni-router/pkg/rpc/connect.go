@@ -3,7 +3,7 @@ package rpc
 import (
 	"log"
 
-	tunnel "github.com/Purple-House/agni-schema/protobuf"
+	tunnel "github.com/odio4u/agni-schema/tunnel"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

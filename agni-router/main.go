@@ -10,10 +10,10 @@ import (
 	"runtime/debug"
 	"syscall"
 
-	tunnel "github.com/Purple-House/agni-schema/protobuf"
-	"github.com/Purple-House/agni-tunnels/agni-router/pkg/config"
-	"github.com/Purple-House/agni-tunnels/agni-router/pkg/rpc"
 	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
+	tunnel "github.com/odio4u/agni-schema/tunnel"
+	"github.com/odio4u/agni-tunnels/agni-router/pkg/config"
+	"github.com/odio4u/agni-tunnels/agni-router/pkg/rpc"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"

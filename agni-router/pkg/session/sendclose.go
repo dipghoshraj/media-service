@@ -3,7 +3,7 @@ package session
 import (
 	"sync"
 
-	tunnel "github.com/Purple-House/agni-schema/protobuf"
+	tunnel "github.com/odio4u/agni-schema/tunnel"
 )
 
 func sendClose(tctx *TunnleContext, reason string) {

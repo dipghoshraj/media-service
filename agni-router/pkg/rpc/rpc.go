@@ -1,9 +1,9 @@
 package rpc
 
-// github.com/Purple-House/agni-tunnels/tunnel-proto
+// github.com/odio4u/agni-tunnels/tunnel-proto
 
 import (
-	tunnel "github.com/Purple-House/agni-schema/protobuf"
+	tunnel "github.com/odio4u/agni-schema/tunnel"
 )
 
 type TunnelRpc struct {
