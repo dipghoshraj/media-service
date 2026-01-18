@@ -43,8 +43,8 @@ func AgentFingerprint() (string, error) {
 func AgentRegistry() (mp.Agent, string, error) {
 
 	config := pkg.Config{
-		Address:     YamlConfig.Agent.Registry.Address,
-		Fingerprint: YamlConfig.Agent.Registry.Fingureprint,
+		Address:     YamlConfig.Agent.Seeder.Address,
+		Fingerprint: YamlConfig.Agent.Seeder.Fingureprint,
 		Timeout:     5 * time.Second,
 	}
 

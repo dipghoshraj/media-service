@@ -7,18 +7,18 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type Registry struct {
+type Seeder struct {
 	Address      string `yaml:"address"`
 	Fingureprint string `yaml:"fingureprint"`
 }
 
 type Agent struct {
-	Name     string   `yaml:"name"`
-	Domain   string   `yaml:"domain"`
-	Forward  int      `yaml:"forward"`
-	Registry Registry `yaml:"registry"`
-	Region   string   `yaml:"region"`
-	Certs    string   `yaml:"certs"`
+	Name    string `yaml:"name"`
+	Domain  string `yaml:"domain"`
+	Forward int    `yaml:"forward"`
+	Seeder  Seeder `yaml:"Seeder"`
+	Region  string `yaml:"region"`
+	Certs   string `yaml:"certs"`
 }
 
 type Config struct {
