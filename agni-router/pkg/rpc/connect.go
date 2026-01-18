@@ -4,6 +4,7 @@ import (
 	"log"
 
 	tunnel "github.com/odio4u/agni-schema/tunnel"
+	"github.com/odio4u/agni-tunnels/agni-router/pkg/session"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -35,13 +36,24 @@ func (server *TunnelRpc) Connect(stream tunnel.AgniTunnel_ConnectServer) error {
 		},
 	}
 
+	domain, exist := session.Seeder.GetDomainMap(req.AgentId)
+	if !exist {
+		log.Panic("[Agni Router] can not found id domain mapping", req.AgentId)
+	}
+
+	agentSession := &session.AgentSession{
+		AppID:  req.AgentId,
+		Stream: &stream,
+	}
+	session.Seeder.Register(domain, agentSession)
+
 	if err = stream.Send(ackMessage); err != nil {
 		return status.Error(codes.ResourceExhausted, "Agent ackoledgement failed")
 	}
 
 	log.Printf("Agent %s connected successfully", req.AgentId)
 
-	return nil
+	select {} // temporary
 }
 
 func checkConnect(req *tunnel.ConnectRequest) bool {

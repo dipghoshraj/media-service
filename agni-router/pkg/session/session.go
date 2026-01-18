@@ -3,16 +3,13 @@ package session
 import (
 	"log"
 	"sync"
-	"time"
 
 	tunnel "github.com/odio4u/agni-schema/tunnel"
 )
 
 type AgentSession struct {
-	AppID    string
-	stream   *tunnel.AgniTunnel_ConnectServer
-	SendChan chan *tunnel.TunnelOpen
-	LastSeen time.Time
+	AppID  string
+	Stream *tunnel.AgniTunnel_ConnectServer
 }
 
 type AgentSeeder struct {
@@ -29,8 +26,15 @@ var Seeder = &AgentSeeder{
 func (r *AgentSeeder) AddDomainMap(appID string, domain string) {
 	r.Lock()
 	defer r.Unlock()
-	r.domainmap[domain] = appID
+	r.domainmap[appID] = domain
 	log.Printf("[Agni Router] mapped app: %s with domain %s", appID, domain)
+}
+
+func (r *AgentSeeder) GetDomainMap(appID string) (string, bool) {
+	r.RLock()
+	defer r.RUnlock()
+	domain, exist := r.domainmap[appID]
+	return domain, exist
 }
 
 func (r *AgentSeeder) Register(appID string, session *AgentSession) {

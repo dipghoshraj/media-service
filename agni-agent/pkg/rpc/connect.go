@@ -65,8 +65,8 @@ func SendConnection(agent maps.Agent) {
 
 	session, err := NewTunnelSession(agent)
 	if err != nil {
-		session.Cancel()
-		session.Conn.Close()
+		// session.Cancel()
+		// session.Conn.Close()
 		panic(err)
 	}
 

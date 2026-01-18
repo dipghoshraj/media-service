@@ -31,7 +31,7 @@ func HandleStream(conn net.Conn) {
 	}
 	tunnelContext := &TunnleContext{
 		connection_id: uuid.New().String(),
-		stream:        session.stream,
+		stream:        session.Stream,
 		tcp:           conn,
 		closed:        make(chan struct{}),
 	}
