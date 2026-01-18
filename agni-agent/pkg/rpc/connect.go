@@ -74,8 +74,13 @@ func SendConnection(agent maps.Agent) {
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt)
 
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
 	go func() {
-		PollStream(session.Stream)
+		if err := PollStream(ctx, session.Stream); err != nil {
+			log.Println("[Agni-Agent] PollStream exited:", err)
+		}
 		close(done)
 	}()
 
