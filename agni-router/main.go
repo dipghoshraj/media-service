@@ -14,6 +14,7 @@ import (
 	tunnel "github.com/odio4u/agni-schema/tunnel"
 	"github.com/odio4u/agni-tunnels/agni-router/pkg/config"
 	"github.com/odio4u/agni-tunnels/agni-router/pkg/rpc"
+	"github.com/odio4u/agni-tunnels/agni-router/server"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -99,6 +100,10 @@ func main() {
 	tunnel.RegisterAgniTunnelServer(s, &rpc.TunnelRpc{})
 
 	// Start the server
+	go func() {
+		server.RouterServer()
+	}()
+
 	log.Println("Server is running on port ", port)
 	go func() {
 		if err := s.Serve(lis); err != nil {

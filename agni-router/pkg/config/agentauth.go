@@ -7,6 +7,8 @@ import (
 	"encoding/hex"
 	"errors"
 	"log"
+
+	"github.com/odio4u/agni-tunnels/agni-router/pkg/session"
 )
 
 func AuthAgent(rawCerts [][]byte, verifiedChains [][]*x509.Certificate) error {
@@ -58,6 +60,6 @@ func getAgent(agentID string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-
+	session.Seeder.AddDomainMap(agentdata.ID, agentdata.Domain)
 	return agentdata.Identity, nil
 }

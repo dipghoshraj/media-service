@@ -17,11 +17,20 @@ type AgentSession struct {
 
 type AgentSeeder struct {
 	sync.RWMutex
-	sessions map[string]*AgentSession
+	sessions  map[string]*AgentSession
+	domainmap map[string]string
 }
 
 var Seeder = &AgentSeeder{
-	sessions: make(map[string]*AgentSession),
+	sessions:  make(map[string]*AgentSession),
+	domainmap: make(map[string]string),
+}
+
+func (r *AgentSeeder) AddDomainMap(appID string, domain string) {
+	r.Lock()
+	defer r.Unlock()
+	r.domainmap[domain] = appID
+	log.Printf("[Agni Router] mapped app: %s with domain %s", appID, domain)
 }
 
 func (r *AgentSeeder) Register(appID string, session *AgentSession) {

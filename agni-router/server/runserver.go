@@ -1,14 +1,18 @@
 package server
 
 import (
+	"fmt"
 	"log"
 	"net"
 
+	"github.com/odio4u/agni-tunnels/agni-router/pkg/config"
 	"github.com/odio4u/agni-tunnels/agni-router/pkg/session"
 )
 
 func RouterServer() {
-	ln, err := net.Listen("tcp", ":443")
+	port := fmt.Sprintf(":%s", config.YamlConfig.Router.ProxtPort)
+	log.Println("Running server on ", port)
+	ln, err := net.Listen("tcp", port)
 	if err != nil {
 		log.Fatal(err)
 	}

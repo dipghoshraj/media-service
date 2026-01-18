@@ -41,7 +41,7 @@ func NewTunnelSession(agent maps.Agent) (*TunnelSession, error) {
 		Message: &tunnel.Envelope_Connect{
 			Connect: &tunnel.ConnectRequest{
 				AgentId:   agent.ID,
-				Token:     agent.Identity,
+				Token:     agent.Domain,
 				Timestamp: time.Now().Unix(),
 				Signature: agent.Identity,
 			},

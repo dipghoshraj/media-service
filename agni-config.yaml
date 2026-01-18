@@ -3,7 +3,7 @@ version: v1
 
 Agent:
   name: "agent-agni"
-  domain: "agni.local"
+  domain: "agni.local.internal"
   forward: 9000
   region: "global"
   certs: 'agni-agent/certs'
