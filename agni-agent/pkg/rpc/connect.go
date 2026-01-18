@@ -75,7 +75,7 @@ func SendConnection(agent maps.Agent) {
 	signal.Notify(quit, os.Interrupt)
 
 	go func() {
-		ReadLoop(session.Stream)
+		PollStream(session.Stream)
 		close(done)
 	}()
 
@@ -84,15 +84,4 @@ func SendConnection(agent maps.Agent) {
 	session.Cancel()
 	session.Conn.Close()
 	<-done
-}
-
-func ReadLoop(stream tunnel.AgniTunnel_ConnectClient) {
-	for {
-		in, err := stream.Recv()
-		if err != nil {
-			log.Println("stream closed:", err)
-			return
-		}
-		log.Println("received the message: ", in.Message)
-	}
 }
