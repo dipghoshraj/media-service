@@ -8,9 +8,9 @@ import (
 )
 
 func main() {
-	log.Println("This is the main entry point for the indraNet reverse proxy.")
+	log.Println("This is the main entry point for the indraNet reverse proxy. Port :---", 3000)
 
-	ln, err := net.Listen("tcp", ":443")
+	ln, err := net.Listen("tcp", ":3000")
 	if err != nil {
 		log.Printf("Error starting server: %v\n", err)
 		return

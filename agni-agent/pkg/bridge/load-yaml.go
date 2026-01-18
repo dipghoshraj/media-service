@@ -30,7 +30,7 @@ var YamlConfig *Config
 
 func init() {
 
-	data, err := os.ReadFile("angi-config.yaml")
+	data, err := os.ReadFile("agni-config.yaml")
 	log.Println("load the config")
 
 	if err != nil {
