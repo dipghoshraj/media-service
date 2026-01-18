@@ -25,7 +25,7 @@ var YamlConfig *Config
 
 func init() {
 
-	data, err := os.ReadFile("agent-config.yaml")
+	data, err := os.ReadFile("angi-config.yaml")
 	log.Println("load the config")
 
 	if err != nil {
