@@ -34,6 +34,8 @@ func HandleStream(conn net.Conn) {
 		return
 	}
 
+	log.Println("[NOVA] found gateway", agent.GatewayAddress)
+
 	backendConn, err := net.DialTimeout("tcp", agent.GatewayAddress, 3*time.Second)
 	if err != nil {
 		log.Printf("Failed to connect to backend %s: %v", agent.GatewayAddress, err)

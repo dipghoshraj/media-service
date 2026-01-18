@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net"
 
@@ -13,7 +12,7 @@ func main() {
 
 	ln, err := net.Listen("tcp", ":443")
 	if err != nil {
-		fmt.Printf("Error starting server: %v\n", err)
+		log.Printf("Error starting server: %v\n", err)
 		return
 	}
 
