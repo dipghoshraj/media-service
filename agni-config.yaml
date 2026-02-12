@@ -9,7 +9,7 @@ Agent:
   certs: 'agni-agent/certs'
   Seeder:
     address: "localhost:8080"
-    fingureprint: "84f141071957cd5f81a8650ab1e2b2f8f792091617611ad730bd7f3e134e9286"
+    fingureprint: "2fc5f60dead3a51b86074210c489b437f8f09a053582fce0db3058d79e2292e1"
 
 
 Router:
@@ -22,10 +22,10 @@ Router:
   dns: "localhost"
   Seeder:
     address: "localhost:8080"
-    fingureprint: "84f141071957cd5f81a8650ab1e2b2f8f792091617611ad730bd7f3e134e9286"
+    fingureprint: "2fc5f60dead3a51b86074210c489b437f8f09a053582fce0db3058d79e2292e1"
 
 
 Nova:
   Seeder:
     address: "localhost:8080"
-    fingureprint: "84f141071957cd5f81a8650ab1e2b2f8f792091617611ad730bd7f3e134e9286"
+    fingureprint: "2fc5f60dead3a51b86074210c489b437f8f09a053582fce0db3058d79e2292e1"

@@ -1,6 +1,7 @@
 package session
 
 import (
+	"log"
 	"net"
 
 	"github.com/google/uuid"
@@ -25,10 +26,12 @@ func HandleStream(conn net.Conn) {
 	}
 
 	session, exists := Seeder.GetSession(serverName)
+	log.Panicln("Received the connection from the proxy", serverName)
 	if !exists {
 		conn.Close()
 		return
 	}
+
 	tunnelContext := &TunnleContext{
 		connection_id: uuid.New().String(),
 		stream:        session.Stream,
