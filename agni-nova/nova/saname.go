@@ -20,8 +20,10 @@ func HandleStream(conn net.Conn) {
 
 	sni, connbuffer, err := sni.PeekSNI(conn)
 	if err != nil {
-		log.Printf("Failed to extract SNI: %v", err)
-		return
+		if err != io.EOF {
+			log.Printf("Failed to extract SNI: %v", err)
+			return
+		}
 	}
 
 	client, err := SeederClient()
