@@ -8,7 +8,7 @@ build-router:
 	cd agni-router && go build -o ../bin/agni-router.exe main.go
 
 build-nova:
-	cd agni-nova && go build -o ../bin/agni-nova.exe main.go
+	cd agni-nova && go build -o ../bin/agni-nova-proxy.exe main.go
 
 ## Show this help
 help:
