@@ -18,15 +18,16 @@ type TunnleContext struct {
 
 func HandleStream(conn net.Conn) {
 	// session.AgentRegistry.GetSession()
+	log.Println("Coming on the handle stream")
 
 	serverName, _, err := sni.PeekSNI(conn)
 	if err != nil {
 		conn.Close()
 		return
 	}
+	log.Println("Received the connection from the proxy", serverName)
 
 	session, exists := Seeder.GetSession(serverName)
-	log.Panicln("Received the connection from the proxy", serverName)
 	if !exists {
 		conn.Close()
 		return

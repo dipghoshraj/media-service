@@ -16,6 +16,8 @@ import (
 
 func HandleStream(conn net.Conn) {
 
+	log.Println("start streaming")
+
 	defer conn.Close()
 
 	sni, connbuffer, err := sni.PeekSNI(conn)
