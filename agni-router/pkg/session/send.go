@@ -26,3 +26,20 @@ func sendClose(tctx *TunnleContext, reason string) {
 		close(tctx.closed)
 	})
 }
+
+func sendOpen(tctx *TunnleContext) {
+	var once sync.Once
+
+	once.Do(func() {
+		stream := *tctx.stream
+		_ = stream.Send(
+			&tunnel.Envelope{
+				Message: &tunnel.Envelope_Open{
+					Open: &tunnel.TunnelOpen{
+						ConnectionId: tctx.connection_id,
+					},
+				},
+			},
+		)
+	})
+}
