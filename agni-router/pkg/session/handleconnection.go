@@ -40,6 +40,8 @@ func HandleStream(conn net.Conn) {
 		closed:        make(chan struct{}),
 	}
 
+	sendOpen(tunnelContext)
+
 	go PollGRPC(tunnelContext)
 	go WriteData(tunnelContext)
 }
