@@ -1,5 +1,7 @@
 package session
 
+// Pulling the data from the agents
+
 func PollGRPC(tunnelCtx *TunnleContext) {
 
 	for {

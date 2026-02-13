@@ -1,5 +1,7 @@
 package session
 
+// This function to write the data in the agent
+
 import (
 	"log"
 
