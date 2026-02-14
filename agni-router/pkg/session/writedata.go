@@ -4,6 +4,7 @@ package session
 
 import (
 	"log"
+	"time"
 
 	tunnel "github.com/odio4u/agni-schema/tunnel"
 )
@@ -15,6 +16,7 @@ func WriteData(tunnelCtx *TunnleContext) {
 	log.Printf("[WriteData] started connection_id=%s", tunnelCtx.connection_id)
 
 	buf := make([]byte, 32*1024)
+	conn.SetReadDeadline(time.Now().Add(10 * time.Second))
 
 	for {
 		n, err := conn.Read(buf)

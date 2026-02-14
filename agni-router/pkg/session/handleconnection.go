@@ -20,7 +20,7 @@ func HandleStream(conn net.Conn) {
 	// session.AgentRegistry.GetSession()
 	log.Println("Coming on the handle stream")
 
-	serverName, _, err := sni.PeekSNI(conn)
+	serverName, wrappedConn, err := sni.PeekSNI(conn)
 	if err != nil {
 		conn.Close()
 		return
@@ -36,7 +36,7 @@ func HandleStream(conn net.Conn) {
 	tunnelContext := &TunnleContext{
 		connection_id: uuid.New().String(),
 		stream:        session.Stream,
-		tcp:           conn,
+		tcp:           wrappedConn,
 		closed:        make(chan struct{}),
 	}
 
