@@ -3,6 +3,7 @@ module github.com/odio4u/agni-tunnels/agni-agent
 go 1.25.5
 
 require (
+	github.com/google/uuid v1.6.0
 	github.com/odio4u/agni-schema v0.0.2
 	github.com/odio4u/mem-sdk/certengine v0.0.0-20260114105847-382309589109
 	github.com/odio4u/mem-sdk/memsdk v0.0.0-20260114105847-382309589109
