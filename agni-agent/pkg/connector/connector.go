@@ -1,0 +1,41 @@
+package connector
+
+import (
+	"context"
+	"errors"
+	"fmt"
+	"net"
+
+	"github.com/odio4u/agni-tunnels/agni-agent/pkg/bridge"
+)
+
+type ConnCtx struct {
+	LocalConn map[string]*net.Conn
+}
+
+func BuildConn(ctx context.Context, id string) (*ConnCtx, error) {
+	ctx = context.WithValue(ctx, "connection_id", id)
+
+	localconn, err := NewConnectionCtx()
+	if err != nil {
+		return nil, err
+	}
+
+	connmap := make(map[string]*net.Conn)
+	connmap[id] = localconn
+	return &ConnCtx{
+		LocalConn: connmap,
+	}, nil
+}
+
+func NewConnectionCtx() (*net.Conn, error) {
+	port := bridge.YamlConfig.Agent.Forward
+	host := net.JoinHostPort("localhost", fmt.Sprintf("%d", port))
+
+	localConn, err := net.Dial("tcp", host)
+	if err != nil {
+		return nil, errors.New("Failed to connect with local connection pool")
+	}
+
+	return &localConn, nil
+}

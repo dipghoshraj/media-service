@@ -6,6 +6,7 @@ import (
 	"log"
 
 	tunnel "github.com/odio4u/agni-schema/tunnel"
+	"github.com/odio4u/agni-tunnels/agni-agent/pkg/connector"
 )
 
 func PollStream(ctx context.Context, stream tunnel.AgniTunnel_ConnectClient) error {
@@ -26,20 +27,25 @@ func PollStream(ctx context.Context, stream tunnel.AgniTunnel_ConnectClient) err
 				log.Println("[Agni-Agent] Stream recv error:", err)
 				return err
 			}
-			handleMessage(msg)
+			handleMessage(ctx, msg)
 		}
 
 	}
 }
 
-func handleMessage(msg *tunnel.Envelope) {
+func handleMessage(ctx context.Context, msg *tunnel.Envelope) {
 	switch m := msg.Message.(type) {
 
 	case *tunnel.Envelope_ConnectAck:
 		log.Println("[Agni-Agent] Connection Ack:", m.ConnectAck.Accepted)
 
 	case *tunnel.Envelope_Open:
-		log.Println("[Agni-Agent] Connection open:", m.Open.ConnectionId)
+		connection_id := m.Open.ConnectionId
+		_, err := connector.BuildConn(ctx, connection_id)
+		if err != nil {
+			// TODO : Send connection close
+		}
+		log.Println("[Agni-Agent] Connection open:", connection_id)
 
 	case *tunnel.Envelope_Data:
 		log.Println("[Agni-Agent] Connection data:", m.Data.ConnectionId)
