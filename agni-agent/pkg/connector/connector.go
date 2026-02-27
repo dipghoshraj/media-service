@@ -9,11 +9,11 @@ import (
 	"github.com/odio4u/agni-tunnels/agni-agent/pkg/bridge"
 )
 
-type ConnCtx struct {
+type LocalConn struct {
 	LocalConn map[string]*net.Conn
 }
 
-func BuildConn(ctx context.Context, id string) (*ConnCtx, error) {
+func BuildConn(ctx context.Context, id string) (*LocalConn, error) {
 	ctx = context.WithValue(ctx, "connection_id", id)
 
 	localconn, err := NewConnectionCtx()
@@ -23,7 +23,7 @@ func BuildConn(ctx context.Context, id string) (*ConnCtx, error) {
 
 	connmap := make(map[string]*net.Conn)
 	connmap[id] = localconn
-	return &ConnCtx{
+	return &LocalConn{
 		LocalConn: connmap,
 	}, nil
 }
