@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"sync"
 	"time"
 
 	tunnel "github.com/odio4u/agni-schema/tunnel"
@@ -17,6 +18,8 @@ type TunnelSession struct {
 	Stream tunnel.AgniTunnel_ConnectClient
 	Ctx    context.Context
 	Cancel context.CancelFunc
+	Close  chan struct{}
+	mu     sync.Mutex
 }
 
 func InitateConnection(router string, gatewayIdentity string) *grpc.ClientConn {
@@ -24,6 +27,7 @@ func InitateConnection(router string, gatewayIdentity string) *grpc.ClientConn {
 	return conn
 }
 
+// build the local server connection
 func NewTunnelSession(agent maps.Agent) (*TunnelSession, error) {
 	conn := GetRouter()
 
@@ -61,14 +65,10 @@ func NewTunnelSession(agent maps.Agent) (*TunnelSession, error) {
 	}, nil
 }
 
-func SendConnection(agent maps.Agent) {
+// Send connection is the function which will start the transaction
+// with the local server
 
-	session, err := NewTunnelSession(agent)
-	if err != nil {
-		// session.Cancel()
-		// session.Conn.Close()
-		panic(err)
-	}
+func (ts *TunnelSession) SendConnection() {
 
 	done := make(chan struct{})
 	quit := make(chan os.Signal, 1)
@@ -78,7 +78,7 @@ func SendConnection(agent maps.Agent) {
 	defer cancel()
 
 	go func() {
-		if err := PollStream(ctx, session.Stream); err != nil {
+		if err := PollStream(ctx, ts.Stream); err != nil {
 			log.Println("[Agni-Agent] PollStream exited:", err)
 		}
 		close(done)
@@ -86,7 +86,7 @@ func SendConnection(agent maps.Agent) {
 
 	<-quit
 	log.Println("Shutting down connection...")
-	session.Cancel()
-	session.Conn.Close()
+	ts.Cancel()
+	ts.Conn.Close()
 	<-done
 }

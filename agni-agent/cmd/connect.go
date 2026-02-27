@@ -15,19 +15,24 @@ var connectCmd = &cobra.Command{
 	Long:  `This command establishes and authenticates a connection to the agent tunnel, allowing you to interact with the IndraNet network.`,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		log.Println("📝 Registering agent with the registry...")
+		log.Println("[Agni Agent] 📝 Registering agent with the registry...")
 		agent, gatewayIdentity, err := bridge.AgentRegistry()
 		if err != nil {
-			log.Fatalf("❌ Failed to register agent: %v", err)
+			log.Fatalf("[Agni Agent] ❌ Failed to register agent: %v", err)
 		}
-		log.Printf("✅ Agent registered successfully: ID=%s, Domain=%s fingurePrint=%s", agent.ID, agent.Domain, agent.Identity)
-		log.Println("🔌 Connecting to the agent tunnel...")
+		log.Printf("[Agni Agent] ✅ Agent registered successfully: ID=%s, Domain=%s fingurePrint=%s", agent.ID, agent.Domain, agent.Identity)
+		log.Println("[Agni Agent]🔌 Connecting to the agent tunnel...")
 		gatewayConntion := fmt.Sprintf("%s:%d", agent.GatewayIP, agent.WssPort)
 
-		log.Println("Connecting to gatewayURL", gatewayConntion)
+		log.Println("[Agni Agent] Connecting to gatewayURL", gatewayConntion)
 		_ = rpc.InitateConnection(gatewayConntion, gatewayIdentity)
 
-		rpc.SendConnection(agent)
+		// rpc.SendConnection(agent)
+		session, err := rpc.NewTunnelSession(agent)
+		if err != nil {
+			log.Println("[Agni Agent] connection  building to local failed")
+		}
+		session.SendConnection()
 	},
 }
 
