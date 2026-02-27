@@ -10,7 +10,7 @@ import (
 )
 
 type LocalConn struct {
-	LocalConn map[string]*net.Conn
+	LocalConn map[string]net.Conn
 }
 
 func BuildConn(ctx context.Context, id string) (*LocalConn, error) {
@@ -21,14 +21,14 @@ func BuildConn(ctx context.Context, id string) (*LocalConn, error) {
 		return nil, err
 	}
 
-	connmap := make(map[string]*net.Conn)
+	connmap := make(map[string]net.Conn)
 	connmap[id] = localconn
 	return &LocalConn{
 		LocalConn: connmap,
 	}, nil
 }
 
-func NewConnectionCtx() (*net.Conn, error) {
+func NewConnectionCtx() (net.Conn, error) {
 	port := bridge.YamlConfig.Agent.Forward
 	host := net.JoinHostPort("localhost", fmt.Sprintf("%d", port))
 
@@ -37,5 +37,5 @@ func NewConnectionCtx() (*net.Conn, error) {
 		return nil, errors.New("Failed to connect with local connection pool")
 	}
 
-	return &localConn, nil
+	return localConn, nil
 }
