@@ -9,17 +9,19 @@ import (
 	"time"
 
 	tunnel "github.com/odio4u/agni-schema/tunnel"
+	"github.com/odio4u/agni-tunnels/agni-agent/pkg/connector"
 	"github.com/odio4u/mem-sdk/memsdk/maps"
 	"google.golang.org/grpc"
 )
 
 type TunnelSession struct {
-	Conn   *grpc.ClientConn
-	Stream tunnel.AgniTunnel_ConnectClient
-	Ctx    context.Context
-	Cancel context.CancelFunc
-	Close  chan struct{}
-	mu     sync.Mutex
+	Conn      *grpc.ClientConn
+	Stream    tunnel.AgniTunnel_ConnectClient
+	Ctx       context.Context
+	Cancel    context.CancelFunc
+	Close     chan struct{}
+	Localconn connector.LocalConn
+	mu        sync.Mutex
 }
 
 func InitateConnection(router string, gatewayIdentity string) *grpc.ClientConn {
@@ -78,7 +80,7 @@ func (ts *TunnelSession) SendConnection() {
 	defer cancel()
 
 	go func() {
-		if err := PollStream(ctx, ts.Stream); err != nil {
+		if err := ts.PollStream(ctx); err != nil {
 			log.Println("[Agni-Agent] PollStream exited:", err)
 		}
 		close(done)
