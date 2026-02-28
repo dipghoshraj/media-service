@@ -51,6 +51,8 @@ func (ts *TunnelSession) handleMessage(ctx context.Context, msg *tunnel.Envelope
 
 		log.Println("[Agni Agent] connected to local server")
 		ts.Localconn = *conn
+
+		go ts.LocaltoRpc(ctx, ts.Localconn.LocalConn[connection_id], connection_id)
 		log.Println("[Agni-Agent] Connection open:", connection_id)
 
 	case *tunnel.Envelope_Data:

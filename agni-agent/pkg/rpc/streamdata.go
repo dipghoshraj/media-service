@@ -3,7 +3,9 @@ package rpc
 import (
 	"context"
 	"fmt"
+	"io"
 	"log"
+	"net"
 
 	"github.com/odio4u/agni-schema/tunnel"
 )
@@ -22,35 +24,40 @@ func (ts *TunnelSession) HandleStream(ctx context.Context, connectionid string, 
 	return nil
 }
 
-func (ts *TunnelSession) LocaltoRpc(ctx context.Context, connectionid string) {
-	localconn := ts.Localconn
-	conn, exist := localconn.LocalConn[connectionid]
-	if !exist {
-		log.Println("[Agni Agent] Falied to fetch the connection from fabric")
-	}
-
+func (ts *TunnelSession) LocaltoRpc(ctx context.Context, conn net.Conn, connectionid string) {
 	go func() {
 		buf := make([]byte, 32*1024)
 
 		for {
 			n, err := conn.Read(buf)
 			if err != nil {
-				// TODO : implemet close logic
+				if err == io.EOF {
+					log.Println("Local connection closed:", connectionid)
+				} else {
+					log.Println("Local read error:", err)
+				}
+				return
 			}
 
-			err = ts.Stream.Send(
-				&tunnel.Envelope{
-					Message: &tunnel.Envelope_Data{
-						Data: &tunnel.TunnelData{
-							ConnectionId: connectionid,
-							Payload:      append([]byte(nil), buf[:n]...),
-						},
+			if n == 0 {
+				continue
+			}
+
+			payload := append([]byte(nil), buf[:n]...)
+
+			ts.sendMu.Lock()
+			err = ts.Stream.Send(&tunnel.Envelope{
+				Message: &tunnel.Envelope_Data{
+					Data: &tunnel.TunnelData{
+						ConnectionId: connectionid,
+						Payload:      payload,
 					},
 				},
-			)
+			})
+			ts.sendMu.Unlock()
 
 			if err != nil {
-				// ctx.sendClose("grpc_send_failed")
+				log.Println("[Agni Agent] send failed:", err)
 				return
 			}
 		}

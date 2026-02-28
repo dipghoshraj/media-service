@@ -22,6 +22,7 @@ type TunnelSession struct {
 	Close     chan struct{}
 	Localconn connector.LocalConn
 	mu        sync.Mutex
+	sendMu    sync.Mutex
 }
 
 func InitateConnection(router string, gatewayIdentity string) *grpc.ClientConn {
