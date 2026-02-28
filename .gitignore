@@ -34,5 +34,3 @@ bin/
 bin/*
 
 *.pem
-target/*
-target
