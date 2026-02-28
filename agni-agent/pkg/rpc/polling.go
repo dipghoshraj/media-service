@@ -58,7 +58,7 @@ func (ts *TunnelSession) handleMessage(ctx context.Context, msg *tunnel.Envelope
 	case *tunnel.Envelope_Data:
 		err := ts.HandleStream(ctx, m.Data.ConnectionId, m.Data.Payload)
 		if err != nil {
-			log.Println("[Agni Agent] failed stream:  ", err.Error())
+			log.Println("[Agni Agent] failed stream:  connection id: ", err.Error(), m.Data.ConnectionId)
 		}
 		log.Println("[Agni-Agent] Connection data:", m.Data.ConnectionId)
 

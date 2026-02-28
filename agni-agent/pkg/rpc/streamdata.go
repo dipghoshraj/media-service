@@ -21,6 +21,7 @@ func (ts *TunnelSession) HandleStream(ctx context.Context, connectionid string, 
 	if err != nil {
 		return fmt.Errorf("Can not write to local server %s", connectionid)
 	}
+	log.Println("[Agni Agent] write data connection id: and size:", connectionid, len(payload))
 	return nil
 }
 
@@ -45,6 +46,7 @@ func (ts *TunnelSession) LocaltoRpc(ctx context.Context, conn net.Conn, connecti
 
 			payload := append([]byte(nil), buf[:n]...)
 
+			log.Println("[Agni Agent] Write data to router : size :", connectionid, len(payload))
 			ts.sendMu.Lock()
 			err = ts.Stream.Send(&tunnel.Envelope{
 				Message: &tunnel.Envelope_Data{
