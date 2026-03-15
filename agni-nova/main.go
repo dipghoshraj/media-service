@@ -1,25 +1,29 @@
 package main
 
 import (
-	"log"
 	"net"
+	"os"
 
 	"github.com/odio4u/agni-tunnels/agni-nova/nova"
 )
 
 func main() {
-	log.Println("This is the main entry point for the indraNet reverse proxy. Port :---", 3001)
+	port := nova.YamlConfig.Nova.Port
+	if port == "" {
+		port = "3001"
+	}
+	nova.Logger.Info("starting nova proxy", "listen_addr", ":"+port)
 
-	ln, err := net.Listen("tcp", ":3001")
+	ln, err := net.Listen("tcp", ":"+port)
 	if err != nil {
-		log.Printf("Error starting server: %v\n", err)
-		return
+		nova.Logger.Error("failed to start listener", "listen_addr", ":"+port, "error", err)
+		os.Exit(1)
 	}
 
 	for {
 		conn, err := ln.Accept()
 		if err != nil {
-			log.Printf("Error accepting connection: %v", err)
+			nova.Logger.Error("failed to accept connection", "error", err)
 			continue
 		}
 		go nova.HandleStream(conn)
