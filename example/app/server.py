@@ -42,10 +42,19 @@
 #         print(f"[server.py] Error: {e}")
 
 
-from flask import Flask
+from flask import Flask, jsonify
 
 app = Flask(__name__)
 
 @app.route("/")
 def hello():
     return "Hello HTTPS from Flask + Gunicorn + Nginx!"
+
+@app.route("/todo")
+def todo():
+    return jsonify({
+        "userId": 1,
+        "id": 1,
+        "title": "delectus aut autem", 
+        "completed": False
+    })
