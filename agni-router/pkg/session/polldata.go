@@ -28,6 +28,12 @@ func PollGRPC(tunnelCtx *TunnleContext) {
 			return
 		}
 
+		if closeMsg := msg.GetClose(); closeMsg != nil && closeMsg.ConnectionId == tunnelCtx.connection_id {
+			logger.Logger.Info("agent closed tunnel", "connection_id", tunnelCtx.connection_id, "reason", closeMsg.Reason)
+			conn.Close()
+			return
+		}
+
 		data := msg.GetData()
 
 		if data == nil || data.ConnectionId != tunnelCtx.connection_id {

@@ -37,6 +37,16 @@ func (ts *TunnelSession) LocaltoRpc(ctx context.Context, conn net.Conn, connecti
 				} else {
 					bridge.Logger.Error("local read error", "connection_id", connectionid, "error", err)
 				}
+				ts.sendMu.Lock()
+				_ = ts.Stream.Send(&tunnel.Envelope{
+					Message: &tunnel.Envelope_Close{
+						Close: &tunnel.TunnelClose{
+							ConnectionId: connectionid,
+							Reason:       "remote connection closed",
+						},
+					},
+				})
+				ts.sendMu.Unlock()
 				return
 			}
 
