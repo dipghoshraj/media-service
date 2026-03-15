@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"log"
-
 	"github.com/odio4u/agni-tunnels/agni-agent/pkg/bridge"
 	"github.com/spf13/cobra"
 )
@@ -18,10 +16,10 @@ var buildCredsCmd = &cobra.Command{
 
 	Long: `This command generates TLS credentials (certificates and keys) for secure communication in the IndraNet agent tunnel.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		log.Println("🔐 Generating TLS credentials...")
+		bridge.Logger.Info("generating TLS credentials", "dns", dns, "name", name)
 		err := bridge.BuildCreds(dns, name)
 		if err != nil {
-			log.Fatalf("❌ Failed to generate TLS credentials: %v", err)
+			bridge.Logger.Error("failed to generate TLS credentials", "error", err)
 		}
 
 	},

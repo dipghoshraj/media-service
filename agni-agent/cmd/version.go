@@ -1,8 +1,7 @@
 package cmd
 
 import (
-	"log"
-
+	"github.com/odio4u/agni-tunnels/agni-agent/pkg/bridge"
 	"github.com/spf13/cobra"
 )
 
@@ -14,7 +13,7 @@ var versionCmd = &cobra.Command{
 		// Print the version of the application
 		// This should be set during the build process
 		version := "0.1.2" // Replace with actual version variable if set during build
-		log.Println("agent-tunnel version:", version)
+		bridge.Logger.Info("agent-tunnel version", "version", version)
 	},
 }
 

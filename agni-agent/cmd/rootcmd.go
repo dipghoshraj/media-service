@@ -1,9 +1,9 @@
 package cmd
 
 import (
-	"log"
 	"os"
 
+	"github.com/odio4u/agni-tunnels/agni-agent/pkg/bridge"
 	"github.com/spf13/cobra"
 )
 
@@ -19,7 +19,7 @@ var rootCmd = &cobra.Command{
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
-		log.Fatalln(err)
+		bridge.Logger.Error("command execution failed", "error", err)
 		os.Exit(1)
 	}
 }

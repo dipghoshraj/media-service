@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/odio4u/agni-tunnels/agni-agent/pkg/bridge"
 	"github.com/odio4u/agni-tunnels/agni-agent/pkg/rpc"
@@ -15,22 +14,25 @@ var connectCmd = &cobra.Command{
 	Long:  `This command establishes and authenticates a connection to the agent tunnel, allowing you to interact with the IndraNet network.`,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		log.Println("[Agni Agent] 📝 Registering agent with the registry...")
+		bridge.Logger.Info("registering agent with the registry")
 		agent, gatewayIdentity, err := bridge.AgentRegistry()
 		if err != nil {
-			log.Fatalf("[Agni Agent] ❌ Failed to register agent: %v", err)
+			bridge.Logger.Error("failed to register agent", "error", err)
+			return
 		}
-		log.Printf("[Agni Agent] ✅ Agent registered successfully: ID=%s, Domain=%s fingurePrint=%s", agent.ID, agent.Domain, agent.Identity)
-		log.Println("[Agni Agent]🔌 Connecting to the agent tunnel...")
+		bridge.Logger.Info("agent registered",
+			"agent_id", agent.ID,
+			"domain", agent.Domain,
+			"fingerprint", agent.Identity,
+		)
 		gatewayConntion := fmt.Sprintf("%s:%d", agent.GatewayIP, agent.WssPort)
-
-		log.Println("[Agni Agent] Connecting to gatewayURL", gatewayConntion)
+		bridge.Logger.Info("connecting to gateway", "gateway", gatewayConntion)
 		_ = rpc.InitateConnection(gatewayConntion, gatewayIdentity)
 
-		// rpc.SendConnection(agent)
 		session, err := rpc.NewTunnelSession(agent)
 		if err != nil {
-			log.Println("[Agni Agent] connection  building to local failed")
+			bridge.Logger.Error("failed to build tunnel session", "error", err)
+			return
 		}
 		session.SendConnection()
 	},

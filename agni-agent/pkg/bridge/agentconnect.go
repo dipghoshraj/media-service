@@ -7,7 +7,6 @@ import (
 	"encoding/hex"
 	"encoding/pem"
 	"fmt"
-	"log"
 	"os"
 	"time"
 
@@ -36,7 +35,7 @@ func AgentFingerprint() (string, error) {
 
 	sum := sha256.Sum256(cert.Raw)
 	fingerprint := hex.EncodeToString(sum[:])
-	log.Printf("Client CERT fingerprint (SHA256): %s", fingerprint)
+	Logger.Info("computed agent cert fingerprint", "fingerprint", fingerprint)
 	return fingerprint, nil
 }
 
@@ -53,7 +52,7 @@ func AgentRegistry() (mp.Agent, string, error) {
 		return mp.Agent{}, "", err
 	}
 
-	log.Printf("finding the gateways in %s region", YamlConfig.Agent.Region)
+	Logger.Info("looking up gateways", "region", YamlConfig.Agent.Region)
 
 	gateways, err := client.GetGatewayInfo(context.Background(), YamlConfig.Agent.Region)
 	if err != nil {
@@ -65,19 +64,19 @@ func AgentRegistry() (mp.Agent, string, error) {
 	}
 
 	gw := gateways[0]
-	log.Printf("Resolved Gateway: %s (%s)\n", gw.IP, gw.ID)
+	Logger.Info("resolved gateway", "gateway_id", gw.ID, "gateway_ip", gw.IP)
 
 	fingerprint, err := AgentFingerprint()
 	if err != nil {
 		return mp.Agent{}, "", err
 	}
-	log.Printf("Using Agent Fingerprint: %s\n", fingerprint)
+	Logger.Info("using agent fingerprint", "fingerprint", fingerprint)
 
 	agent, err := client.ConnectAgent(context.Background(), YamlConfig.Agent.Domain, gw.ID, fingerprint, YamlConfig.Agent.Region)
 	if err != nil {
 		return mp.Agent{}, "", err
 	}
 
-	log.Printf("Connected Agent: %s (%s)\n", agent.ID, agent.Domain)
+	Logger.Info("agent registered", "agent_id", agent.ID, "domain", agent.Domain)
 	return agent, gw.Identity, nil
 }
