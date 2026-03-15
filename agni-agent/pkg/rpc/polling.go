@@ -2,34 +2,33 @@ package rpc
 
 import (
 	"context"
+	"fmt"
 	"io"
-	"log"
 
 	tunnel "github.com/odio4u/agni-schema/tunnel"
+	"github.com/odio4u/agni-tunnels/agni-agent/pkg/bridge"
 	"github.com/odio4u/agni-tunnels/agni-agent/pkg/connector"
 )
 
 func (ts *TunnelSession) PollStream(ctx context.Context) error {
 
 	for {
-
 		select {
 		case <-ctx.Done():
-			log.Println("[Agni-Agent] PollStream stopped:", ctx.Err())
+			bridge.Logger.Info("poll stream stopped", "reason", ctx.Err())
 			return ctx.Err()
 		default:
 			msg, err := ts.Stream.Recv()
 			if err != nil {
 				if err == io.EOF {
-					log.Println("[Agni-Agent] Stream closed by server")
+					bridge.Logger.Info("stream closed by server")
 					return nil
 				}
-				log.Println("[Agni-Agent] Stream recv error:", err)
+				bridge.Logger.Error("stream recv error", "error", err)
 				return err
 			}
 			ts.handleMessage(ctx, msg)
 		}
-
 	}
 }
 
@@ -37,7 +36,7 @@ func (ts *TunnelSession) handleMessage(ctx context.Context, msg *tunnel.Envelope
 	switch m := msg.Message.(type) {
 
 	case *tunnel.Envelope_ConnectAck:
-		log.Println("[Agni-Agent] Connection Ack:", m.ConnectAck.Accepted)
+		bridge.Logger.Info("connect ack received", "accepted", m.ConnectAck.Accepted)
 
 	case *tunnel.Envelope_Open:
 		ts.mu.Lock()
@@ -46,28 +45,32 @@ func (ts *TunnelSession) handleMessage(ctx context.Context, msg *tunnel.Envelope
 		connection_id := m.Open.ConnectionId
 		conn, err := connector.BuildConn(ctx, connection_id)
 		if err != nil {
-			log.Printf("[Agni Agent] WARNING: failed to dial local server for connection_id=%s: %v — is the local app running on the configured forward port?", connection_id, err)
+			bridge.Logger.Warn("failed to dial local server",
+				"connection_id", connection_id,
+				"error", err,
+				"hint", "is the local app running on the configured forward port?",
+			)
 			return
 		}
 
-		log.Println("[Agni Agent] connected to local server")
+		bridge.Logger.Info("connected to local server", "connection_id", connection_id)
 		ts.Localconn = *conn
 
 		go ts.LocaltoRpc(ctx, ts.Localconn.LocalConn[connection_id], connection_id)
-		log.Println("[Agni-Agent] Connection open:", connection_id)
+		bridge.Logger.Info("tunnel open", "connection_id", connection_id)
 
 	case *tunnel.Envelope_Data:
 		err := ts.HandleStream(ctx, m.Data.ConnectionId, m.Data.Payload)
 		if err != nil {
-			log.Println("[Agni Agent] failed stream:  connection id: ", err.Error(), m.Data.ConnectionId)
+			bridge.Logger.Error("failed to handle stream data", "connection_id", m.Data.ConnectionId, "error", err)
 		}
-		log.Println("[Agni-Agent] Connection data:", m.Data.ConnectionId)
+		bridge.Logger.Info("data frame received", "connection_id", m.Data.ConnectionId)
 
 	case *tunnel.Envelope_Close:
 		connection_id := m.Close.ConnectionId
-		log.Println("[Agni-Agent] Connection closed:", connection_id)
+		bridge.Logger.Info("tunnel closed", "connection_id", connection_id)
 
 	default:
-		log.Printf("[Agni-Agent] Unknown event type: %T", m)
+		bridge.Logger.Warn("unknown envelope type", "type", fmt.Sprintf("%T", m))
 	}
 }

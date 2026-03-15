@@ -7,7 +7,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"log"
+	"os"
 
 	"github.com/odio4u/agni-tunnels/agni-agent/pkg/bridge"
 	"google.golang.org/grpc"
@@ -34,7 +34,7 @@ func routerConnect(router string, gatewayIdentity string) *grpc.ClientConn {
 			fp := sha256.Sum256(cert.Raw)
 			expected := gatewayIdentity
 
-			log.Println("current gateway connection data ", hex.EncodeToString(fp[:]))
+			bridge.Logger.Info("verifying gateway fingerprint", "fingerprint", hex.EncodeToString(fp[:]))
 
 			if hex.EncodeToString(fp[:]) != expected {
 				return errors.New("server fingerprint mismatch")
@@ -49,9 +49,9 @@ func routerConnect(router string, gatewayIdentity string) *grpc.ClientConn {
 		router,
 		grpc.WithTransportCredentials(creds),
 	)
-
 	if err != nil {
-		panic(err)
+		bridge.Logger.Error("failed to create gRPC client", "router", router, "error", err)
+		os.Exit(1)
 	}
 
 	rpcconn = conn

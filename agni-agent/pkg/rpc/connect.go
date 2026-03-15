@@ -2,13 +2,13 @@ package rpc
 
 import (
 	"context"
-	"log"
 	"os"
 	"os/signal"
 	"sync"
 	"time"
 
 	tunnel "github.com/odio4u/agni-schema/tunnel"
+	"github.com/odio4u/agni-tunnels/agni-agent/pkg/bridge"
 	"github.com/odio4u/agni-tunnels/agni-agent/pkg/connector"
 	"github.com/odio4u/mem-sdk/memsdk/maps"
 	"google.golang.org/grpc"
@@ -82,13 +82,13 @@ func (ts *TunnelSession) SendConnection() {
 
 	go func() {
 		if err := ts.PollStream(ctx); err != nil {
-			log.Println("[Agni-Agent] PollStream exited:", err)
+			bridge.Logger.Error("poll stream exited", "error", err)
 		}
 		close(done)
 	}()
 
 	<-quit
-	log.Println("Shutting down connection...")
+	bridge.Logger.Info("shutting down connection")
 	ts.Cancel()
 	ts.Conn.Close()
 	<-done
