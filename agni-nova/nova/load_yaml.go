@@ -1,7 +1,6 @@
 package nova
 
 import (
-	"log"
 	"os"
 
 	"gopkg.in/yaml.v3"
@@ -14,6 +13,8 @@ type Seeder struct {
 
 type Nova struct {
 	Seeder Seeder `yaml:"Seeder"`
+	Name   string `yaml:"name"`
+	Port   string `yaml:"port"`
 }
 
 type Config struct {
@@ -24,19 +25,18 @@ type Config struct {
 var YamlConfig *Config
 
 func init() {
-
 	data, err := os.ReadFile("agni-config.yaml")
-	log.Println("load the config")
-
 	if err != nil {
-		log.Fatalf("error reading YAML file: %v", err)
+		Logger.Error("failed to read config file", "file", "agni-config.yaml", "error", err)
+		os.Exit(1)
 	}
 
 	var config Config
-	err = yaml.Unmarshal(data, &config)
-	if err != nil {
-		log.Fatalf("error parsing YAML file: %v", err)
+	if err = yaml.Unmarshal(data, &config); err != nil {
+		Logger.Error("failed to parse config file", "file", "agni-config.yaml", "error", err)
+		os.Exit(1)
 	}
 
 	YamlConfig = &config
+	Logger.Info("config loaded", "file", "agni-config.yaml", "version", config.Version)
 }
