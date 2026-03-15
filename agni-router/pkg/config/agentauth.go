@@ -6,8 +6,8 @@ import (
 	"crypto/x509"
 	"encoding/hex"
 	"errors"
-	"log"
 
+	"github.com/odio4u/agni-tunnels/agni-router/pkg/logger"
 	"github.com/odio4u/agni-tunnels/agni-router/pkg/session"
 )
 
@@ -16,7 +16,7 @@ func AuthAgent(rawCerts [][]byte, verifiedChains [][]*x509.Certificate) error {
 	if len(rawCerts) == 0 {
 		return errors.New("no client certificate provided")
 	}
-	log.Println("coming with client certificates")
+	logger.Logger.Info("client certificate received")
 
 	clientCert, err := x509.ParseCertificate(rawCerts[0])
 	if err != nil {
@@ -24,22 +24,21 @@ func AuthAgent(rawCerts [][]byte, verifiedChains [][]*x509.Certificate) error {
 	}
 
 	fp := sha256.Sum256(clientCert.Raw)
-	log.Println("Client fingerprint:", hex.EncodeToString(fp[:]))
 
 	if len(clientCert.DNSNames) == 0 {
 		return errors.New("no DNS SAN present in client cert")
 	}
 	agentID := clientCert.DNSNames[0]
 
-	log.Println("Authenticating agent:", agentID)
+	logger.Logger.Info("authenticating agent", "agent_id", agentID, "fingerprint", hex.EncodeToString(fp[:]))
 
 	identity, err := getAgent(agentID)
 	if err != nil {
-		log.Println("can not fetch the identity of the agent")
+		logger.Logger.Error("failed to fetch agent identity", "agent_id", agentID, "error", err)
 		return errors.New("No agent found")
 	}
 
-	log.Printf("%s agent with idenity %s", agentID, identity)
+	logger.Logger.Info("agent identity resolved", "agent_id", agentID, "identity", identity)
 
 	if hex.EncodeToString(fp[:]) != identity {
 		return errors.New("client fingerprint mismatch")

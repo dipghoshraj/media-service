@@ -7,11 +7,11 @@ import (
 	"encoding/hex"
 	"encoding/pem"
 	"fmt"
-	"log"
 	"os"
 	"strconv"
 	"time"
 
+	"github.com/odio4u/agni-tunnels/agni-router/pkg/logger"
 	mp "github.com/odio4u/mem-sdk/memsdk/maps"
 	"github.com/odio4u/mem-sdk/memsdk/pkg"
 )
@@ -36,7 +36,7 @@ func CertFingurePrint() (string, error) {
 
 	sum := sha256.Sum256(cert.Raw)
 	fingerprint := hex.EncodeToString(sum[:])
-	log.Printf("Client CERT fingerprint (SHA256): %s", fingerprint)
+	logger.Logger.Info("computed router cert fingerprint", "fingerprint", fingerprint)
 	return fingerprint, nil
 }
 
@@ -81,8 +81,14 @@ func SeedGatway(fingureprint string) error {
 
 	gateways, err := client.Addgateway(ctx, router)
 	if err != nil {
-		panic(err)
+		logger.Logger.Error("failed to register gateway", "error", err)
+		os.Exit(1)
 	}
-	log.Println("Added Gateway:", gateways.ID, gateways.GatewayPort, gateways.WssPort, gateways.IP)
+	logger.Logger.Info("gateway registered",
+		"gateway_id", gateways.ID,
+		"gateway_ip", gateways.IP,
+		"gateway_port", gateways.GatewayPort,
+		"wss_port", gateways.WssPort,
+	)
 	return nil
 }

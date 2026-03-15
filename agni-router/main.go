@@ -3,7 +3,6 @@ package main
 import (
 	"crypto/tls"
 	"fmt"
-	"log"
 	"net"
 	"os"
 	"os/signal"
@@ -13,6 +12,7 @@ import (
 	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
 	tunnel "github.com/odio4u/agni-schema/tunnel"
 	"github.com/odio4u/agni-tunnels/agni-router/pkg/config"
+	"github.com/odio4u/agni-tunnels/agni-router/pkg/logger"
 	"github.com/odio4u/agni-tunnels/agni-router/pkg/rpc"
 	"github.com/odio4u/agni-tunnels/agni-router/server"
 
@@ -26,7 +26,7 @@ func gracefulShutdown(server *grpc.Server) {
 	signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
 	<-stop
 
-	log.Println("Shutting down server...")
+	logger.Logger.Info("shutting down server")
 
 	// Attempt graceful shutdown
 	server.Stop()
@@ -40,7 +40,8 @@ func main() {
 
 	cert, err := tls.LoadX509KeyPair(permfile, permfileKey)
 	if err != nil {
-		log.Fatalf("failed to load server certificate: %v", err)
+		logger.Logger.Error("failed to load server certificate", "error", err)
+		os.Exit(1)
 	}
 
 	servertLs := &tls.Config{
@@ -69,7 +70,8 @@ func main() {
 
 	fingurePrint, err := config.CertFingurePrint()
 	if err != nil {
-		log.Fatalf("Failed to print certificate fingerprint: %v", err)
+		logger.Logger.Error("failed to read certificate fingerprint", "error", err)
+		os.Exit(1)
 	}
 
 	port := config.YamlConfig.Router.RouterPort
@@ -78,13 +80,14 @@ func main() {
 
 	lis, err := net.Listen("tcp", port)
 	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
+		logger.Logger.Error("failed to start gRPC listener", "listen_addr", port, "error", err)
+		os.Exit(1)
 	}
 
 	recoveryOpts := []grpc_recovery.Option{
 		grpc_recovery.WithRecoveryHandler(func(p interface{}) error {
 			stack := string(debug.Stack())
-			log.Printf("[PANIC RECOVERED] %v\nSTACK TRACE:\n%s", p, stack)
+			logger.Logger.Error("panic recovered", "panic", fmt.Sprintf("%v", p), "stack", stack)
 			return fmt.Errorf("internal server error")
 		}),
 	}
@@ -104,10 +107,11 @@ func main() {
 		server.RouterServer()
 	}()
 
-	log.Println("Server is running on port ", port)
+	logger.Logger.Info("gRPC server listening", "listen_addr", port)
 	go func() {
 		if err := s.Serve(lis); err != nil {
-			log.Fatalf("failed to serve: %v", err)
+			logger.Logger.Error("gRPC server error", "error", err)
+			os.Exit(1)
 		}
 	}()
 
