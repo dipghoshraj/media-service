@@ -46,7 +46,8 @@ func (ts *TunnelSession) handleMessage(ctx context.Context, msg *tunnel.Envelope
 		connection_id := m.Open.ConnectionId
 		conn, err := connector.BuildConn(ctx, connection_id)
 		if err != nil {
-			// TODO : Send connection close
+			log.Printf("[Agni Agent] WARNING: failed to dial local server for connection_id=%s: %v — is the local app running on the configured forward port?", connection_id, err)
+			return
 		}
 
 		log.Println("[Agni Agent] connected to local server")

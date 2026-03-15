@@ -23,6 +23,5 @@ func main() {
 			continue
 		}
 		go nova.HandleStream(conn)
-		log.Printf("Accepted connection from %s", conn.RemoteAddr())
 	}
 }
