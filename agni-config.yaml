@@ -5,6 +5,7 @@ Agent:
   name: "agent-agni"
   domain: "agni.local.internal"
   forward: 5050
+  host: "localhost"
   region: "global"
   certs: 'agni-agent/certs'
   Seeder:
