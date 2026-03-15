@@ -30,9 +30,11 @@ func BuildConn(ctx context.Context, id string) (*LocalConn, error) {
 
 func NewConnectionCtx() (net.Conn, error) {
 	port := bridge.YamlConfig.Agent.Forward
-	host := net.JoinHostPort("localhost", fmt.Sprintf("%d", port))
+	host := bridge.YamlConfig.Agent.Host
 
-	localConn, err := net.Dial("tcp", host)
+	url := net.JoinHostPort(host, fmt.Sprintf("%d", port))
+
+	localConn, err := net.Dial("tcp", url)
 	if err != nil {
 		return nil, errors.New("Failed to connect with local connection pool")
 	}

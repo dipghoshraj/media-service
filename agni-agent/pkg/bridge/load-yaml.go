@@ -15,6 +15,7 @@ type Agent struct {
 	Name    string `yaml:"name"`
 	Domain  string `yaml:"domain"`
 	Forward int    `yaml:"forward"`
+	Host    string `yaml:"host"`
 	Seeder  Seeder `yaml:"Seeder"`
 	Region  string `yaml:"region"`
 	Certs   string `yaml:"certs"`
