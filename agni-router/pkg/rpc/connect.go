@@ -1,9 +1,8 @@
 package rpc
 
 import (
-	"log"
-
 	tunnel "github.com/odio4u/agni-schema/tunnel"
+	"github.com/odio4u/agni-tunnels/agni-router/pkg/logger"
 	"github.com/odio4u/agni-tunnels/agni-router/pkg/session"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -38,7 +37,8 @@ func (server *TunnelRpc) Connect(stream tunnel.AgniTunnel_ConnectServer) error {
 
 	domain, exist := session.Seeder.GetDomainMap(req.AgentId)
 	if !exist {
-		log.Panic("[Agni Router] can not found id domain mapping", req.AgentId)
+		logger.Logger.Error("agent id to domain mapping not found", "agent_id", req.AgentId)
+		return status.Errorf(codes.NotFound, "domain mapping not found for agent %s", req.AgentId)
 	}
 
 	agentSession := &session.AgentSession{
@@ -51,16 +51,12 @@ func (server *TunnelRpc) Connect(stream tunnel.AgniTunnel_ConnectServer) error {
 		return status.Error(codes.ResourceExhausted, "Agent ackoledgement failed")
 	}
 
-	log.Printf("Agent %s connected successfully", req.AgentId)
+	logger.Logger.Info("agent connected", "agent_id", req.AgentId, "domain", domain)
 
 	select {} // temporary
 }
 
 func checkConnect(req *tunnel.ConnectRequest) bool {
-	log.Println("check the agent", req.AgentId)
-	// log.Println("check the token", req.Token)
-	// log.Println("check the signature", req.Signature)
-	// log.Println("check the none", req.Nonce)
-
+	logger.Logger.Info("validating connect request", "agent_id", req.AgentId)
 	return true
 }

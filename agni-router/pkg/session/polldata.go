@@ -2,7 +2,7 @@ package session
 
 // Pulling the data from the agents
 
-import "log"
+import "github.com/odio4u/agni-tunnels/agni-router/pkg/logger"
 
 func PollGRPC(tunnelCtx *TunnleContext) {
 
@@ -16,10 +16,13 @@ func PollGRPC(tunnelCtx *TunnleContext) {
 
 		if err != nil {
 			if !dataReceived {
-				log.Printf("[PollGRPC] WARNING: stream closed before agent sent any response data connection_id=%s err=%v — TLS handshake may have failed on the local server",
-					tunnelCtx.connection_id, err)
+				logger.Logger.Warn("stream closed before agent sent any response",
+					"connection_id", tunnelCtx.connection_id,
+					"error", err,
+					"hint", "TLS handshake may have failed on the local server",
+				)
 			} else {
-				log.Printf("[PollGRPC] stream recv error connection_id=%s err=%v", tunnelCtx.connection_id, err)
+				logger.Logger.Error("stream recv error", "connection_id", tunnelCtx.connection_id, "error", err)
 			}
 			conn.Close()
 			return
@@ -31,14 +34,14 @@ func PollGRPC(tunnelCtx *TunnleContext) {
 			continue
 		}
 
-		log.Printf("[PollGRPC] writing %d bytes to client connection_id=%s", len(data.Payload), tunnelCtx.connection_id)
+		logger.Logger.Info("writing bytes to client", "connection_id", tunnelCtx.connection_id, "bytes", len(data.Payload))
 		_, err = conn.Write(data.Payload)
 		if err != nil {
-			log.Printf("[PollGRPC] write error connection_id=%s err=%v", tunnelCtx.connection_id, err)
+			logger.Logger.Error("write to client failed", "connection_id", tunnelCtx.connection_id, "error", err)
 			sendClose(tunnelCtx, "Write poll error")
 			return
 		}
 		dataReceived = true
-		log.Printf("[PollGRPC] wrote %d bytes to client connection_id=%s", len(data.Payload), tunnelCtx.connection_id)
+		logger.Logger.Info("wrote bytes to client", "connection_id", tunnelCtx.connection_id, "bytes", len(data.Payload))
 	}
 }
