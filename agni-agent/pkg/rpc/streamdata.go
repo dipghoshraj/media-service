@@ -41,9 +41,11 @@ func (ts *TunnelSession) LocaltoRpc(ctx context.Context, conn net.Conn, connecti
 			}
 
 			if n == 0 {
+				log.Println("[Agni Agent] local aggregator returned 0 bytes, connection id:", connectionid)
 				continue
 			}
 
+			log.Printf("[Agni Agent] received %d bytes from local aggregator, connection id: %s", n, connectionid)
 			payload := append([]byte(nil), buf[:n]...)
 
 			log.Println("[Agni Agent] Write data to router : size :", connectionid, len(payload))
