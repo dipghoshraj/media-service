@@ -7,7 +7,7 @@ Agent:
   forward: 5050
   host: "localhost"
   region: "global"
-  certs: 'agni-agent/certs'
+  certs: './'
   Seeder:
     address: "localhost:8080"
     fingureprint: "021d78cb94755b095d93b30f59d42dcdc8c104cf7e8f758c3b367d844ae53911"
