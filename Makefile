@@ -1,35 +1,96 @@
-build-agent:
-	cd agni-agent && go build -o ../bin/agni-agent main.go
+# ── per-module Makefiles ────────────────────────────────────────────────────
+# Each module (agni-router, agni-agent, agni-nova) has its own Makefile with
+# platform-specific targets. Use the targets below as convenience shortcuts
+# from the repo root, or cd into the module directory and run make directly.
+#
+# Output binaries are placed in release/ at the project root.
+# ─────────────────────────────────────────────────────────────────────────────
+
+RELEASE_DIR := release
+
+# ── router ───────────────────────────────────────────────────────────────────
+router-linux:
+	$(MAKE) -C agni-router build-linux
+
+router-darwin:
+	$(MAKE) -C agni-router build-darwin
+
+router-windows:
+	$(MAKE) -C agni-router build-windows
+
+router-all:
+	$(MAKE) -C agni-router build-all
 
 router-certs:
-	cd agni-router && go run . gen-certs
+	$(MAKE) -C agni-router gen-certs
 
-build-router:
-	cd agni-router && go build -o ../bin/agni-router main.go
+# ── agent ────────────────────────────────────────────────────────────────────
+agent-linux:
+	$(MAKE) -C agni-agent build-linux
 
-build-nova:
-	cd agni-nova && go build -o ../bin/agni-nova-proxy main.go
+agent-darwin:
+	$(MAKE) -C agni-agent build-darwin
 
+agent-windows:
+	$(MAKE) -C agni-agent build-windows
 
-build-all:
-	@echo "Building Router..."
-	cmd /C "set GOOS=linux&& set GOARCH=amd64&& set CGO_ENABLED=0&& cd agni-router && go build -o release/agni-router-linux-amd64 main.go"
-	@echo "Building agent..."
-	cmd /C "set GOOS=linux&& set GOARCH=amd64&& set CGO_ENABLED=0&& cd agni-agent && go build -o release/agni-agent-linux-amd64 main.go"
-	@echo "Building nova..."
-	cmd /C "set GOOS=linux&& set GOARCH=amd64&& set CGO_ENABLED=0&& cd agni-nova && go build -o release/agni-nova-linux-amd64 main.go"
-	@echo "All builds completed."
+agent-all:
+	$(MAKE) -C agni-agent build-all
+
+# ── nova ─────────────────────────────────────────────────────────────────────
+nova-linux:
+	$(MAKE) -C agni-nova build-linux
+
+nova-darwin:
+	$(MAKE) -C agni-nova build-darwin
+
+nova-windows:
+	$(MAKE) -C agni-nova build-windows
+
+nova-all:
+	$(MAKE) -C agni-nova build-all
+
+# ── combined ─────────────────────────────────────────────────────────────────
+build-all-linux: router-linux agent-linux nova-linux
+
+build-all-darwin: router-darwin agent-darwin nova-darwin
+
+build-all-windows: router-windows agent-windows nova-windows
+
+build-all: router-all agent-all nova-all
 
 ## Show this help
 help:
-	@echo "Usage:"
-	@echo "make build-agent     Build agni agent"
-	@echo "make router-certs    Generate router certificates (uses built-in gen-certs subcommand)"
-	@echo "make build-router    Build agni router"
-	@echo "make build-nova      Build agni nova"
+	@echo "Usage: make <target>"
 	@echo ""
-	@echo "After building the router, you can also run cert generation directly:"
-	@echo "  ./bin/agni-router gen-certs"
+	@echo "Router targets (agni-router/Makefile):"
+	@echo "  router-linux     Build agni-router for Linux"
+	@echo "  router-darwin    Build agni-router for macOS"
+	@echo "  router-windows   Build agni-router for Windows"
+	@echo "  router-all       Build agni-router for all platforms"
+	@echo "  router-certs     Generate router TLS certificates"
+	@echo ""
+	@echo "Agent targets (agni-agent/Makefile):"
+	@echo "  agent-linux      Build agni-agent for Linux"
+	@echo "  agent-darwin     Build agni-agent for macOS"
+	@echo "  agent-windows    Build agni-agent for Windows"
+	@echo "  agent-all        Build agni-agent for all platforms"
+	@echo ""
+	@echo "Nova targets (agni-nova/Makefile):"
+	@echo "  nova-linux       Build agni-nova for Linux"
+	@echo "  nova-darwin      Build agni-nova for macOS"
+	@echo "  nova-windows     Build agni-nova for Windows"
+	@echo "  nova-all         Build agni-nova for all platforms"
+	@echo ""
+	@echo "Combined targets:"
+	@echo "  build-all-linux   Build all components for Linux"
+	@echo "  build-all-darwin  Build all components for macOS"
+	@echo "  build-all-windows Build all components for Windows"
+	@echo "  build-all         Build all components for all platforms"
+	@echo ""
+	@echo "All binaries are written to: $(RELEASE_DIR)/"
 
-
-.PHONY: build router-certs help
+.PHONY: router-linux router-darwin router-windows router-all router-certs \
+        agent-linux  agent-darwin  agent-windows  agent-all  \
+        nova-linux   nova-darwin   nova-windows   nova-all   \
+        build-all-linux build-all-darwin build-all-windows build-all help
