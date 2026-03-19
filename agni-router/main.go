@@ -15,6 +15,7 @@ import (
 	"github.com/odio4u/agni-tunnels/agni-router/pkg/logger"
 	"github.com/odio4u/agni-tunnels/agni-router/pkg/rpc"
 	"github.com/odio4u/agni-tunnels/agni-router/server"
+	certpkg "github.com/odio4u/mem-sdk/certengine/pkg"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -33,7 +34,31 @@ func gracefulShutdown(server *grpc.Server) {
 
 }
 
+// runGenCerts generates the router TLS certificates from values in agni-config.yaml
+// and exits. Run with: agni-router gen-certs
+func runGenCerts() {
+	routerIps := []string{config.YamlConfig.Router.RouterIP}
+	dns := []string{config.YamlConfig.Router.Dns}
+
+	_, err := certpkg.GenerateSelfSignedGPR(config.YamlConfig.Router.Name, routerIps, dns)
+	if err != nil {
+		logger.Logger.Error("[Agni Router] failed to generate certificates", "error", err)
+		os.Exit(1)
+	}
+
+	logger.Logger.Info("[Agni Router] certificates generated successfully",
+		"name", config.YamlConfig.Router.Name,
+		"ip", config.YamlConfig.Router.RouterIP,
+		"dns", config.YamlConfig.Router.Dns,
+	)
+}
+
 func main() {
+
+	if len(os.Args) > 1 && os.Args[1] == "gen-certs" {
+		runGenCerts()
+		return
+	}
 
 	permfile := fmt.Sprintf("%s/server.pem", config.YamlConfig.Router.Certs)
 	permfileKey := fmt.Sprintf("%s/server-key.pem", config.YamlConfig.Router.Certs)

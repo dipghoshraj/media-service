@@ -2,7 +2,7 @@ build-agent:
 	cd agni-agent && go build -o ../bin/agni-agent main.go
 
 router-certs:
-	cd agni-router && go run certmanger/certrouter.go
+	cd agni-router && go run . gen-certs
 
 build-router:
 	cd agni-router && go build -o ../bin/agni-router main.go
@@ -24,9 +24,12 @@ build-all:
 help:
 	@echo "Usage:"
 	@echo "make build-agent     Build agni agent"
-	@echo "make router-certs    Generate router certificates"
+	@echo "make router-certs    Generate router certificates (uses built-in gen-certs subcommand)"
 	@echo "make build-router    Build agni router"
 	@echo "make build-nova      Build agni nova"
+	@echo ""
+	@echo "After building the router, you can also run cert generation directly:"
+	@echo "  ./bin/agni-router gen-certs"
 
 
 .PHONY: build router-certs help
