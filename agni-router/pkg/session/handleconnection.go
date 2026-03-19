@@ -2,6 +2,7 @@ package session
 
 import (
 	"net"
+	"sync"
 
 	"github.com/google/uuid"
 	tunnel "github.com/odio4u/agni-schema/tunnel"
@@ -14,6 +15,7 @@ type TunnleContext struct {
 	stream        *tunnel.AgniTunnel_ConnectServer
 	tcp           net.Conn
 	closed        chan struct{}
+	closeOnce     sync.Once
 }
 
 func HandleStream(conn net.Conn) {
