@@ -88,7 +88,7 @@ help:
 	@echo "  build-all-windows Build all components for Windows"
 	@echo "  build-all         Build all components for all platforms"
 	@echo ""
-	@echo "All binaries are written to: $(RELEASE_DIR)/"
+	@echo "All binaries are written to: $(RELEASE_DIR)/{linux,darwin,windows}/"
 
 .PHONY: router-linux router-darwin router-windows router-all router-certs \
         agent-linux  agent-darwin  agent-windows  agent-all  \
