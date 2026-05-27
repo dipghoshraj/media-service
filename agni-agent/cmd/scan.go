@@ -81,13 +81,28 @@ func printSeedersTable(result bridge.SeederInfoResponse) {
 	}
 
 	// summary header box
-	const boxWidth = 46
+	summaryTitle := "AGNISTACK SEEDERS"
+	summaryLines := []string{
+		"Network      : " + result.Network,
+		fmt.Sprintf("Online Nodes : %d / %d", online, len(result.Seeders)),
+		"Discovery    : Decentralized",
+	}
+	boxWidth := 46
+	if w := runeWidth(summaryTitle); w > boxWidth {
+		boxWidth = w
+	}
+	for _, line := range summaryLines {
+		if w := runeWidth(line) + 2; w > boxWidth {
+			boxWidth = w
+		}
+	}
+
 	fmt.Printf("┌%s┐\n", strings.Repeat("─", boxWidth))
-	fmt.Printf("│%s│\n", centerPad("AGNISTACK SEEDERS", boxWidth))
+	fmt.Printf("│%s│\n", centerPad(summaryTitle, boxWidth))
 	fmt.Printf("├%s┤\n", strings.Repeat("─", boxWidth))
-	fmt.Printf("│ %s │\n", padRight("Network      : "+result.Network, boxWidth-2))
-	fmt.Printf("│ %s │\n", padRight(fmt.Sprintf("Online Nodes : %d / %d", online, len(result.Seeders)), boxWidth-2))
-	fmt.Printf("│ %s │\n", padRight("Discovery    : Decentralized", boxWidth-2))
+	for _, line := range summaryLines {
+		fmt.Printf("│ %s │\n", padRight(line, boxWidth-2))
+	}
 	fmt.Printf("└%s┘\n\n", strings.Repeat("─", boxWidth))
 
 	if len(result.Seeders) == 0 {
