@@ -28,22 +28,39 @@ func runScan(_ *cobra.Command, _ []string) {
 
 // ── string helpers ────────────────────────────────────────────────────────────
 
-// runeWidth returns the terminal display width of s for column alignment.
-func runeWidth(s string) int {
-	return runewidth.StringWidth(s)
+// isRegionalIndicator reports whether r is a Unicode Regional Indicator Symbol
+// (U+1F1E6–U+1F1FF), used in pairs to encode country flag emoji.
+func isRegionalIndicator(r rune) bool {
+	return r >= 0x1F1E6 && r <= 0x1F1FF
 }
 
-// padRight pads s with trailing spaces to the given rune width.
+// displayWidth returns the terminal display width of s for column alignment.
+// go-runewidth counts each Regional Indicator pair (flag emoji like 🇮🇳) as
+// width 1, but most terminals render the combined flag as 2 columns. We
+// add 1 correction per detected pair so padding stays aligned.
+func displayWidth(s string) int {
+	w := runewidth.StringWidth(s)
+	runes := []rune(s)
+	for i := 0; i+1 < len(runes); i++ {
+		if isRegionalIndicator(runes[i]) && isRegionalIndicator(runes[i+1]) {
+			w++
+			i++ // skip the second indicator — it's already part of this pair
+		}
+	}
+	return w
+}
+
+// padRight pads s with trailing spaces until its display width reaches width.
 func padRight(s string, width int) string {
-	if n := runeWidth(s); n < width {
+	if n := displayWidth(s); n < width {
 		return s + strings.Repeat(" ", width-n)
 	}
 	return s
 }
 
-// centerPad centers s within a field of the given rune width.
+// centerPad centers s within a field of the given display width.
 func centerPad(s string, width int) string {
-	n := runeWidth(s)
+	n := displayWidth(s)
 	if n >= width {
 		return s
 	}
@@ -87,11 +104,11 @@ func printSeedersTable(result bridge.SeederInfoResponse) {
 		"Discovery    : Decentralized",
 	}
 	boxWidth := 46
-	if w := runeWidth(summaryTitle); w > boxWidth {
+	if w := displayWidth(summaryTitle); w > boxWidth {
 		boxWidth = w
 	}
 	for _, line := range summaryLines {
-		if w := runeWidth(line) + 2; w > boxWidth {
+		if w := displayWidth(line) + 2; w > boxWidth {
 			boxWidth = w
 		}
 	}
@@ -113,7 +130,7 @@ func printSeedersTable(result bridge.SeederInfoResponse) {
 	headers := []string{"#", "IP", "STATUS", "REGION", "MAINTAINER"}
 	widths := make([]int, len(headers))
 	for i, h := range headers {
-		widths[i] = runeWidth(h)
+		widths[i] = displayWidth(h)
 	}
 
 	rows := make([][]string, len(result.Seeders))
@@ -126,7 +143,7 @@ func printSeedersTable(result bridge.SeederInfoResponse) {
 			s.Maintainer,
 		}
 		for j, cell := range rows[i] {
-			if w := runeWidth(cell); w > widths[j] {
+			if w := displayWidth(cell); w > widths[j] {
 				widths[j] = w
 			}
 		}
