@@ -29,6 +29,8 @@ type SeederInfoResponse struct {
 
 // ScanForSeeders fetches the list of registered Seeders from the AgniStack registry.
 func ScanForSeeders() (SeederInfoResponse, error) {
+
+	// TODO: Need to use timeouts and retries here, and also consider caching results for a short duration to avoid hitting the registry too often.
 	resp, err := http.Get(seederRegistryURL)
 	if err != nil {
 		return SeederInfoResponse{}, fmt.Errorf("failed to fetch seeder registry: %w", err)
