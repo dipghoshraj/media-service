@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 	"strings"
-	"unicode/utf8"
 
+	"github.com/mattn/go-runewidth"
 	"github.com/odio4u/agni-tunnels/agni-agent/pkg/bridge"
 	"github.com/spf13/cobra"
 )
@@ -28,9 +28,9 @@ func runScan(_ *cobra.Command, _ []string) {
 
 // ── string helpers ────────────────────────────────────────────────────────────
 
-// runeWidth returns the rune count of s for terminal column alignment.
+// runeWidth returns the terminal display width of s for column alignment.
 func runeWidth(s string) int {
-	return utf8.RuneCountInString(s)
+	return runewidth.StringWidth(s)
 }
 
 // padRight pads s with trailing spaces to the given rune width.
