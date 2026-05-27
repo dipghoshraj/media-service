@@ -33,10 +33,7 @@ type SeederInfoResponse struct {
 func ScanForSeeders() (SeederInfoResponse, error) {
 	client := &http.Client{Timeout: 10 * time.Second}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, seederRegistryURL, nil)
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, seederRegistryURL, nil)
 	if err != nil {
 		return SeederInfoResponse{}, fmt.Errorf("failed to create registry request: %w", err)
 	}
