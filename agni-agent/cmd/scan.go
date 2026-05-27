@@ -18,7 +18,6 @@ It lists the Seeders returned by the registry so you can identify potential conn
 }
 
 func runScan(_ *cobra.Command, _ []string) {
-	bridge.Logger.Info("scanning for Seeders and tunnels")
 	result, err := bridge.ScanForSeeders()
 	if err != nil {
 		bridge.Logger.Error("failed to scan for Seeders", "error", err)
