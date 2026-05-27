@@ -12,8 +12,8 @@ import (
 var scanCmd = &cobra.Command{
 	Use:   "scan",
 	Short: "Scan for available Seeders",
-	Long: `This command scans the local network for available Seeders and their advertised tunnels.
-It uses mDNS to discover Seeders and retrieves their tunnel information for potential connections.`,
+	Long: `This command queries the configured registry for available Seeders.
+It lists the Seeders returned by the registry so you can identify potential connections.`,
 	Run: runScan,
 }
 
