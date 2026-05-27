@@ -1,9 +1,11 @@
 package bridge
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 )
 
 const seederRegistryURL = "https://gist.githubusercontent.com/dipghoshraj/dbb415d4987a99ef465add5945cca071/raw/config.json"
@@ -29,9 +31,17 @@ type SeederInfoResponse struct {
 
 // ScanForSeeders fetches the list of registered Seeders from the AgniStack registry.
 func ScanForSeeders() (SeederInfoResponse, error) {
+	client := &http.Client{Timeout: 10 * time.Second}
 
-	// TODO: Need to use timeouts and retries here, and also consider caching results for a short duration to avoid hitting the registry too often.
-	resp, err := http.Get(seederRegistryURL)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, seederRegistryURL, nil)
+	if err != nil {
+		return SeederInfoResponse{}, fmt.Errorf("failed to create registry request: %w", err)
+	}
+
+	resp, err := client.Do(req)
 	if err != nil {
 		return SeederInfoResponse{}, fmt.Errorf("failed to fetch seeder registry: %w", err)
 	}
