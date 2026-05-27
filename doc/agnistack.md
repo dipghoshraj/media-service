@@ -1,8 +1,20 @@
-# Agnistack — Privacy-First Reverse Tunnel Network
+# Agnistack — Privacy-First fabric for exposing private servers to the internet
+
+Modern infrastructure is becoming increasingly centralized. Developers depend on third-party platforms to expose services, route traffic, and manage networking — often at the cost of privacy, control, and resilience
 
 Agnistack is a privacy-first, decentralized application deployment network. It is built to expose **private servers** to the internet through a distributed routing network — without TLS termination, without data inspection, and without giving up control of your certificates or domain.
 
 You bring your own domain, your own SSL certs, and your own server. Agnistack routes the raw TCP stream directly to it. Nothing more.
+
+AgniStack explores a different direction:
+
+- **Distributed infrastructure** — no single point of failure or control
+- **Community-operated networking** — anyone can run a router, seeder, or proxy node
+- **Privacy-first connectivity** — raw TCP relay, no TLS termination, no payload inspection
+- **Zero-trust identity** — certificate fingerprint pinning, not CA-chain trust
+- **Edge-native** — built to work in restricted, firewalled, or censored environments
+
+The goal is not just tunneling. The goal is foundational infrastructure for the next generation of private, distributed systems.
 
 While it works on localhost for development and testing, the primary use case is exposing a **privately hosted server** — a VPS, a bare-metal machine behind NAT, or a server on a restricted network — without opening firewall ports or changing your network setup.
 
@@ -50,14 +62,19 @@ All components are open source. You can run your own seeder and nova, or connect
 
 ---
 
-## Identity & Security
+## Security
 
-- Each agent generates a **self-signed TLS certificate**. The SHA-256 fingerprint of that cert becomes the agent's identity.
-- The fingerprint is registered with the seeder on connect. The router verifies it on every connection.
-- **TLS 1.3 only.** `InsecureSkipVerify: true` is used for the gRPC dial, but a custom `VerifyPeerCertificate` callback rejects any peer whose fingerprint doesn't match what the seeder returned.
-- No CA chain, no certificate authority to trust or be compromised.
+AgniStack uses a zero-trust-inspired model with no dependency on certificate authorities.
+
+- **Outbound-only connections.** The agent always initiates. No inbound ports are opened on your server.
+- **Certificate fingerprint identity.** Each agent generates a self-signed TLS certificate. The SHA-256 fingerprint is the agent's identity — registered with the seeder and verified by the router on every connection.
+- **TLS 1.3 only.** All gRPC connections enforce `MinVersion: tls.VersionTLS13`. A custom `VerifyPeerCertificate` callback rejects any peer whose fingerprint doesn't match the seeder's response, even with `InsecureSkipVerify: true` set for the dial.
+- **No CA chain.** No certificate authority to trust, rotate, or compromise.
+- **No payload inspection.** Traffic is forwarded as raw bytes — AgniStack has no visibility into connection content.
 
 ---
+
+
 
 ## Getting Started with agni-agent
 
@@ -65,25 +82,21 @@ All components are open source. You can run your own seeder and nova, or connect
 
 - A domain with DNS access
 - A private server or local machine running your application
-- `agni-agent` binary ([download](#build) or build from source)
+- `agni-agent` binary ([download](#build-from-source) or build from source)
 
 ---
 
 ### Step 1 — Discover Available Seeders
 
-Run the scan command to list available seeders in the network:
-
 ```bash
 agni-agent scan
 ```
 
-This prints a table of seeders (address, region, fingerprint). Pick one to use in your config.
+Prints a table of seeders (address, region, fingerprint). Pick one for your config.
 
 ---
 
 ### Step 2 — Configure `agni-config.yaml`
-
-Create or edit `agni-config.yaml` in the directory where you'll run the agent:
 
 ```yaml
 version: v1
@@ -92,71 +105,39 @@ Agent:
   name: "my-agent"
   domain: "myapp.example.com"   # Your domain — used for SNI routing
   forward: 443                  # Local port your app listens on
-  host: "localhost"             # Local host to dial
+  host: "localhost"
   region: "global"
   certs: "./"                   # Directory containing client.pem + client-key.pem
   Seeder:
-    address: "45.130.164.217:8080"      # Seeder address from scan output
-    fingureprint: "<seeder-fingerprint>" # Seeder cert fingerprint from scan output
+    address: "45.130.164.217:8080"
+    fingureprint: "<seeder-fingerprint>"
 ```
 
-| Field | Description |
-|-------|-------------|
-| `domain` | The domain your users connect to (must match your DNS record) |
-| `forward` | The port your application listens on (on the private server) |
-| `host` | Host to dial on the private server — `localhost` if the app runs on the same machine as the agent, or a LAN IP if it runs elsewhere |
-| `certs` | Path to your `client.pem` and `client-key.pem` files |
-| `region` | Region for gateway lookup (e.g., `global`) |
-| `Seeder.address` | Address of the seeder service |
-| `Seeder.fingureprint` | SHA-256 fingerprint of the seeder's TLS cert |
+See [agni-agent-quickstart.md](agni-agent-quickstart.md) for a full field reference.
 
 ---
 
 ### Step 3 — Generate Agent Credentials
 
-Generate a self-signed TLS certificate for your agent's identity:
-
 ```bash
 agni-agent gen-creds --dns myapp.example.com --name client
 ```
 
-This creates `client.pem` and `client-key.pem` in the current directory (or wherever `certs` points in your config).
-
-| Flag | Required | Description |
-|------|----------|-------------|
-| `--dns` | Yes | DNS SAN to embed in the certificate (use your domain or agent ID) |
-| `--name` | Yes | Base filename for the generated files (`<name>.pem`, `<name>-key.pem`) |
+Creates `client.pem` and `client-key.pem` in the current directory.
 
 ---
 
-### Step 4 — Point Your Domain to the Network
+### Step 4 — Connect
 
-After connecting (Step 5), the agent prints the nova address. Add a DNS `A` record for your domain pointing to that address.
-
-```
-myapp.example.com.  A  <nova-ip>
-```
-
----
-
-### Step 5 — Connect
-
-Make sure your application is running on the private server, then run the agent on that same machine (or anywhere with network access to `host:forward`):
+Start your application, then run the agent on the same machine:
 
 ```bash
 agni-agent connect
 ```
 
-The agent will:
-1. Read config from `agni-config.yaml`
-2. Compute the certificate fingerprint and register with the seeder
-3. Discover the assigned router (gateway)
-4. Open a persistent gRPC tunnel to the router
-5. Begin relaying traffic to your application
+The agent registers with the seeder, discovers the assigned router, and opens a persistent gRPC tunnel. Once connected, add a DNS `A` record for your domain pointing to the nova address the agent prints.
 
-Leave it running. Any external request to your domain will be tunneled through, end-to-end, to your private server in real time.
-
-> **Localhost also works.** If you are running both the agent and your app on a local machine (e.g., for development), set `host: localhost` and `forward` to your dev port. The tunnel behaves identically.
+> **Local development:** set `host: localhost` and `forward` to your dev port. The tunnel behaves identically.
 
 ---
 
@@ -254,6 +235,40 @@ agni-agent connect
 Once connected, set your domain's A record to the nova address printed by the agent. Your private server is now reachable from the internet — no open ports, no firewall changes, no TLS termination.
 
 > **For local development:** the same steps apply. Set `host: localhost` and `forward` to your dev port. The agent tunnels traffic to whatever is running on that port.
+
+---
+
+## Current Capabilities
+
+- Secure application exposure through outbound-only tunnels
+- SNI-based distributed ingress routing
+- Persistent gRPC bidirectional streams between agent and router
+- Certificate fingerprint identity — no CA chain
+- TLS 1.3 enforcement across all connections
+- Decentralized seeder discovery
+- Multi-platform agent (`linux`, `darwin`, `windows`)
+- Self-hostable full stack
+
+---
+
+## In Progress
+
+- Global routing optimization across multiple regions
+- Observability layer (connection metrics, tunnel health)
+- Access control and policy enforcement
+- Multi-region failover
+- Dynamic service discovery
+
+---
+
+## Future Direction
+
+AgniStack is the foundational infrastructure layer for future privacy-first systems. Long-term directions include:
+
+- Zero-trust communication infrastructure
+- Community-backed anonymous networking
+- Decentralized edge-native connectivity protocols
+- Privacy-first routing with no central registry dependency
 
 ---
 

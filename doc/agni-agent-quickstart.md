@@ -43,21 +43,11 @@ make build-agent
 ./bin/agni-agent.exe connect
 ```
 
-Or use the CLI directly:
+Or use `go run` during development:
 
 ```bash
 cd agni-agent
 go run . connect
 ```
 
-This will register the agent, discover the router, and establish a tunnel.
-
-## 5. Connect Using agni-cli
-
-The agent CLI supports the `connect` command:
-
-```bash
-./bin/agni-agent.exe connect
-```
-
-This command authenticates and connects to the tunnel using your config and certificates.
+This registers the agent with the seeder, discovers the router, and establishes a tunnel.
