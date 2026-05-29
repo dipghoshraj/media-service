@@ -28,19 +28,24 @@ type Config struct {
 
 var YamlConfig *Config
 
-func init() {
-	data, err := os.ReadFile("agni-config.yaml")
+const DefaultConfigFile = "agni-config.yaml"
+
+func LoadConfig(path string) {
+	if path == "" {
+		path = DefaultConfigFile
+	}
+	data, err := os.ReadFile(path)
 	if err != nil {
-		Logger.Error("failed to read config file", "file", "agni-config.yaml", "error", err)
+		Logger.Error("failed to read config file", "file", path, "error", err)
 		os.Exit(1)
 	}
 
 	var config Config
 	if err = yaml.Unmarshal(data, &config); err != nil {
-		Logger.Error("failed to parse config file", "file", "agni-config.yaml", "error", err)
+		Logger.Error("failed to parse config file", "file", path, "error", err)
 		os.Exit(1)
 	}
 
 	YamlConfig = &config
-	Logger.Info("config loaded", "file", "agni-config.yaml", "version", config.Version)
+	Logger.Info("config loaded", "file", path, "version", config.Version)
 }
